@@ -86,7 +86,7 @@ const AttributeComponent = (props) => {
                 const ValueAttribute = () => {
                   let k = props.attributeOptions.find((items)=>subItems.Attribute === items.value).label
                   // console.log("kkkkk",k)
-                  return <Box>{ `${subIndex+1}. :  ${k}`}</Box>;
+                  return <Box>{ `${subIndex+1}. :  ${k}`}</Box>
 
 
                 };
