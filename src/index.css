@@ -36,6 +36,21 @@ code {
 .groupicon{
   text-align: right;
 }
+/* .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+  height: 2px!important;
+} */
+
+.css-0 {
+  width: 99% !important;
+  padding-left: 2px !important;
+}
+.css-d0uhtl {
+  /* margin-left: 16px; */
+  width: 22% !important;
+  border: 1px solid black !important;
+  /* padding-left: 28px; */
+  text-align: center !important;
+}
 
 .mainattribute{
   width: 100%;

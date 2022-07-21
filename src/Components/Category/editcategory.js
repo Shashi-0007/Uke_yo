@@ -237,13 +237,18 @@ const EditCategory = (props) => {
   const [checklist, setChecklist] = useState([]);
   const [category, setCategory] = useState({
     categoryname: "",
-    parent: 2,
-    checkbox: "",
+    parent: 0,
     status: false,
-    group: "",
-    attribute: "",
     statusApi: "0",
+    // checkbox: "",
+    // group: "",
+    // attribute: "",
   });
+
+  const [groupAttribute, setGroupAttribute] =useState({
+    group: "",
+    attribute: ""
+  })
   const [linkGroups, setLinkGroups] = useState([]);
   const [linkAttribute, setLinkAttribute] = useState([]);
 
@@ -372,7 +377,7 @@ const EditCategory = (props) => {
 
   const handleGroupChangeOpt = (selectedGroupOptions) => {
     // console.log('selectedGroupOptions', selectedGroupOptions);
-    setCategory((prev) => {
+    setGroupAttribute((prev) => {
       return {
         ...prev,
         //link : { group: selectedGroupOptions.value }
@@ -382,41 +387,39 @@ const EditCategory = (props) => {
   };
 
   const Attribute = [];
-  const handleLinkGroupsAdd = (indexOf) => {
-    if(category.group !==''){
-    if(indexOf === -1){
-      //console.log('hell is', indexOf)
-    let groupis = category.link
-    let a = { Group: category.group, Attribute };
-    setLinkGroups([...linkGroups, a]);
+  const handleLinkGroupsAdd = () => {
+    if (groupAttribute.group !== "") {
+      let group = groupAttribute.group;
+      const indexOf = linkGroups?.findIndex((item) => item.Group === group);
+      if (indexOf === -1) {
+        let a = { Group: groupAttribute.group, Attribute };
+        setLinkGroups([...linkGroups, a]);
+      }
     }
-  }
-}
+  };
 
-const handleAttributeChangeOpt = (selectedAttributeOption) => {
-  setCategory((old) => {
-    return {
-      ...old,
-      attribute: selectedAttributeOption.value,
-    };
-  }
-  )
-};
+  const handleAttributeChangeOpt = (selectedAttributeOption) => {
+    setGroupAttribute((old) => {
+      return {
+        ...old,
+        attribute: selectedAttributeOption.value,
+      };
+    });
+  };
 
-const handleLinkAttributeAdd =() => {
-  if(category.attribute !==''){
-  let c = { Attribute: category.attribute };
-  let group=category.group
-  const filter = linkGroups.indexOf(group);
-  
-  const index = linkGroups.findIndex(item => item.Group === group);
-  //console.log('index',index );
-  setLinkAttribute([
-    ...linkAttribute,
-    { Group: group, Attribute: linkGroups[index].Attribute.push(c) }
-  ]);
-}
-}
+  const handleLinkAttributeAdd = () => {
+    if (groupAttribute.attribute !== "") {
+      let c = { Attribute: groupAttribute.attribute };
+      let group = groupAttribute.group;
+      const index = linkGroups.findIndex((item) => item.Group === group);
+      setLinkAttribute([
+        ...linkAttribute,
+        { Group: group, Attribute: linkGroups[index].Attribute.push(c) },
+      ]);
+    }
+    console.log("atatatata",linkGroups)
+  };
+
 
 const handleLinkGroupsRemove = (index) => {
   const list = [...linkGroups];
@@ -557,7 +560,7 @@ useEffect(()=>{
               <Select
                 placeholder="Select Group"
                 options={groupOptions}
-                defaultValue={category.group}
+                defaultValue={groupAttribute.group}
                 onChange={handleGroupChangeOpt}
                 
               />
@@ -584,12 +587,12 @@ useEffect(()=>{
                 maxWidth: "90%",
               }}
             >
-              {category.group !=='' ?  
+              {groupAttribute.group !=='' ?  
               <>
               <Select
                 placeholder="Select Attribute"
                 options={attributeOptions}
-                defaultValue={category.attribute}
+                defaultValue={groupAttribute.attribute}
                 onChange={(e) => handleAttributeChangeOpt(e)}
                
               />
