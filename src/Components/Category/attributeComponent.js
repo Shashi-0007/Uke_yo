@@ -114,7 +114,6 @@ const AttributeComponent = (props) => {
                                 variant="contained"
                                 // onClick={() => deleteAttrb(subItems.Attribute, props.value.Group)}
                                 onClick={() => handleLinkAttributeRemove(subItems.Attribute, props.value.Group)}
-
                             />
                         </Box>
                     </Box>
