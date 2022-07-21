@@ -1,5 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Paper,  Box,  Button, Typography,  TextField,  FormControlLabel,  Checkbox,  Grid} from "@mui/material";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  Paper,
+  Box,
+  Button,
+  Typography,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Grid,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Layout from "../../Pages/Layout";
 import FormLabel from "@mui/material/FormLabel";
@@ -11,11 +20,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { addcategory } from "../../redux/action/Action";
 import { allCategories, allGroup, allField } from "../../redux/action/Action";
 import { useNavigate } from "react-router-dom";
-import {  SortableContainer,  SortableElement,  sortableHandle, arrayMove } from "react-sortable-hoc";
+import {
+  SortableContainer,
+  SortableElement,
+  sortableHandle,
+  arrayMove,
+} from "react-sortable-hoc";
 import Groups from "./groupComponent";
-
-
-
+import AttributeComponent from "./attributeComponent";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -29,7 +41,7 @@ const useStyle = makeStyles((theme) => ({
     zIndex: -99,
     "& .MuiPaper-root": {
       width: "100%",
-      marginLeft:'22%',
+      marginLeft: "22%",
       marginTop: "10%",
       height: "max-content",
       padding: `${theme.spacing(4)} 0`,
@@ -118,6 +130,12 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const AddCategory = (props) => {
+  const dragItem = useRef();
+  const dragOverItem = useRef();
+  const dragItemAttr = useRef();
+  const dragOverItemAttr = useRef();
+  const [list, setList] = useState();
+
   const classes = useStyle(props);
   const Navigate = useNavigate();
   const [checklist, setChecklist] = useState([]);
@@ -132,7 +150,7 @@ const AddCategory = (props) => {
   });
   const [linkGroups, setLinkGroups] = useState([]);
   const [linkAttribute, setLinkAttribute] = useState([]);
-console.log('linkGroups',linkGroups)
+
   // const [category, setCategory] = useState({
   //   categoryname: "",
   //   parent: 2,
@@ -146,22 +164,18 @@ console.log('linkGroups',linkGroups)
   //       }]
   //   }]
   // });
-
-  
-
-console.log('category', category)
   const dispatch = useDispatch();
   const getAllCategory = useSelector(
     (state) => state.allCategoryReducer.categoryData
   );
   const getAllgroup = useSelector((state) => state.allGroupReducer.allData);
 
-  console.log('getAllgroup', getAllgroup)
-  
 
-  const getAllAttributes = useSelector( (state) => state.allFieldsReducer.allData  );
 
-  console.log('getAllAttributes', getAllAttributes)
+  const getAllAttributes = useSelector(
+    (state) => state.allFieldsReducer.allData
+  );
+
 
   const options = [];
   getAllCategory.map((items) =>
@@ -179,7 +193,6 @@ console.log('category', category)
   // groupOptions.push({ value: items.id, label: items.group_display_name })
   // );
 
-
   const attributeOptions = [
     { value: "1", label: "Attribute Chocolate" },
     { value: "2", label: "Attribute Strawberry" },
@@ -190,7 +203,6 @@ console.log('category', category)
   // getAllAttributes.map((items) =>
   // attributeOptions.push({ value: items.id, label: items.feild_name })
   // );
-
 
   const handlerStatus = (e) => {
     if (category.status) {
@@ -222,65 +234,53 @@ console.log('category', category)
   };
 
   const handleGroupChangeOpt = (selectedGroupOptions) => {
-    // console.log('selectedGroupOptions', selectedGroupOptions);
     setCategory((prev) => {
       return {
         ...prev,
         //link : { group: selectedGroupOptions.value }
-        group: selectedGroupOptions.value
-      }
+        group: selectedGroupOptions.value,
+      };
     });
   };
 
- 
   const Attribute = [];
-  const handleLinkGroupsAdd = (indexOf) => {
-    if(category.group !==''){
-    if(indexOf === -1){
-      //console.log('hell is', indexOf)
-    let groupis = category.link
-    let a = { Group: category.group, Attribute };
-    setLinkGroups([...linkGroups, a]);
+  const handleLinkGroupsAdd = () => {
+    if (category.group !== "") {
+      let group = category.group;
+      const indexOf = linkGroups?.findIndex((item) => item.Group === group);
+      if (indexOf === -1) {
+        let groupis = category.link;
+        let a = { Group: category.group, Attribute };
+        setLinkGroups([...linkGroups, a]);
+      }
     }
-  }
-}
-
+  };
 
   const handleAttributeChangeOpt = (selectedAttributeOption) => {
     setCategory((old) => {
-      console.log('old data is', old)
-    //   return{
-    //     ...old,
-    //   link :{
-    //     ...old.link,
-    //     Attribute :{
-    //       ...old.link.Attribute,
-    //       Attribute : selectedAttributeOption.value
-    //     }
-    //   }
-    // }
       return {
         ...old,
         attribute: selectedAttributeOption.value,
       };
-    }
-    )
+    });
   };
 
-  const handleLinkAttributeAdd =() => {
-    if(category.attribute !==''){
-    let c = { Attribute: category.attribute };
-    let group=category.group
-    const filter = linkGroups.indexOf(group);
-    
-    const index = linkGroups.findIndex(item => item.Group === group);
-    //console.log('index',index );
-    setLinkAttribute([
-      ...linkAttribute,
-      { Group: group, Attribute: linkGroups[index].Attribute.push(c) }
-    ]);
-  }
-}
+  const handleLinkAttributeAdd = () => {
+    if (category.attribute !== "") {
+      let c = { Attribute: category.attribute };
+      let group = category.group;
+      const filter = linkGroups.indexOf(group);
+
+      const index = linkGroups.findIndex((item) => item.Group === group);
+      setLinkAttribute([
+        ...linkAttribute,
+        { Group: group, Attribute: linkGroups[index].Attribute.push(c) },
+      ]);
+    }
+    console.log("atatatata",linkGroups)
+  };
+
+
 
   const handleLinkGroupsRemove = (index) => {
     const list = [...linkGroups];
@@ -288,28 +288,22 @@ console.log('category', category)
     setLinkGroups(list);
   };
 
-
   const handleLinkAttributeRemove = (Attribute, Group) => {
-
-     //console.log("it is Group", Group);
-     //console.log("it is Attribute", Attribute);
-
     linkGroups.map((itemis) =>
       itemis.Attribute.map((subItemis, index) => {
-        
         if (itemis.Group === Group) {
           if (subItemis.Attribute === Attribute) {
-            setLinkAttribute([
-              ...linkAttribute,
-              { Group: Group, Attribute: itemis.Attribute.splice(index, 1) },
-            ]);
+            // setLinkAttribute([
+            //   ...linkAttribute,
+            //   { Group: Group, Attribute: itemis.Attribute.splice(index, 1) },
+            // ]);
+            list.splice(index, 1);
+            setList(list);
           }
         }
       })
     );
-    //console.log('linkGroups is tada', linkGroups);
-
-   
+    
   };
 
   const handlecategory = (e) => {
@@ -323,410 +317,333 @@ console.log('category', category)
   };
 
   const handleAddCategory = () => {
-    let Data = {category : category, link : linkGroups}
+    let Data = { category: category, link: linkGroups };
+    console.log('data is', Data)
 
-    dispatch(addcategory(Data))
-    .then(() => Navigate("/categorytable"));
-    console.log('data is tada', Data);
-    
+    // dispatch(addcategory(Data)).then(() => Navigate("/categorytable"));
+
     // .then(()=> Navigate('/linkgroup'))
   };
+console.log('list after updating is', list);
 
-  const SortableGroupItem = SortableElement(({ value }) => {
-    // console.log('object', value);
-    const index = linkGroups.indexOf(value);
-    const ValueAddGrps = () => {
-    };
-    return (
-      <>
-        <Box
-          sx={{
-            marginBottom: "10px",
-            marginTop: "10px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            variant="string"
-            sx={{
-              width: "30%",
-              border: "1px solid #dcdde0",
-              padding: " 12px 7px",
-              borderRadius: "5px",
-            }}
-            name="grp"
-            key={index}
-          >
-            {ValueAddGrps()}
-          </Typography>
-
-          <Box
-            className="react_box"
-            sx={{
-              marginBottom: "5px",
-              marginLeft: "10px",
-              display: "flex",
-              marginTop: "25px",
-              width: "100%",
-              maxWidth: "40%",
-            }}
-          ></Box>
-          <Button
-            sx={{
-              marginLeft: "53px",
-              backgroundColor: "#808080",
-            }}
-            variant="contained"
-            onClick={() => handleLinkGroupsRemove(index)}
-          >
-            -
-          </Button>
-        </Box>
-      </>
-    );
-    //console.log('index is', index) #E8E8E8
-  });
-
-  const SortableAttributeItem = SortableElement(({ value }) => {
-    let { Attribute } = value;
-    // console.log("Attribute of attribute", Attribute);
-    // console.log("value of attribute", value);
-    const IndexofAttribute = () => {
-      //const filterIndex = linkGroups.filter((items)=>  value.Attribute === items.Attribute)
-      const filterIndex = linkGroups.filter((items) =>
-        console.log("items.Attribute", items.Attribute)
-      );
-
-      console.log(" value.Attribute", value.Attribute);
-    };
-    let itemsare = [...linkGroups];
-
-    console.log("itemsare", itemsare);
-    const filterIndexData = itemsare.map((items) => {
-      return items.Group;
-    });
-    console.log("filterIndexData", filterIndexData);
-
-    const indexAttribute = linkGroups.indexOf(value);
-
-    console.log("indexAttribute", IndexofAttribute());
-
-    const ValueAddAttribute = () => {
-      let arr = attributeOptions.filter(
-        (items) => value.Attribute === items.value
-      );
-      for (let i = 0; i < arr.length; i++) {
-        return arr[i].label;
-      }
-    };
-    return (
-      <>
-        <Box
-          sx={{
-            marginBottom: "10px",
-            marginTop: "10px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            variant="string"
-            sx={{
-              width: "35%",
-              border: "1px solid #dcdde0",
-              padding: " 12px 7px",
-              borderRadius: "5px",
-            }}
-            name="Attribute"
-          >
-            {ValueAddAttribute()}
-          </Typography>
-          <Button
-            sx={{
-              marginLeft: "10px",
-              backgroundColor: "#808080",
-            }}
-            variant="contained"
-            onClick={() =>
-              handleLinkAttributeRemove(Attribute, filterIndexData)
-            }
-          >
-            -
-          </Button>
-        </Box>
-      </>
-    );
-  });
-
-  const SortableGroupList = SortableContainer(({ items }) => {
-    return (
-      <Box>
-        {items.map((value, index) => (
-          <SortableGroupItem
-            key={items.attributefields}
-            index={index}
-            value={value}
-          />
-        ))}
-      </Box>
-    );
-  });
-
-  const SortableAttributeList = SortableContainer(({ items }) => {
-    console.log("items are tada", items);
-    return (
-      <Box>
-        {items.map((value, index) => (
-          <SortableAttributeItem key={items.id} index={index} value={value} />
-        ))}
-      </Box>
-    );
-  });
-
-  const onSortGroupEnd = async ({ oldIndex, newIndex }) => {
-    let tasksCopy = [...linkGroups];
-    tasksCopy = arrayMove(tasksCopy, oldIndex, newIndex);
-    setLinkGroups(tasksCopy);
+  const dragStart = (e, position) => {
+    dragItem.current = position;
   };
 
-  const onSortAttributeEnd = async ({ oldIndex, newIndex }) => {
-    console.log("New and Old index are", oldIndex, newIndex);
-    const filterData = linkGroups.map((items) => {
-      return items.Attribute;
-    });
-    const indexA = linkGroups.indexOf(filterData);
-    let tasksCopy = [...linkGroups];
-    // console.log('NlinkGroupsare',tasksCopy);
-    console.log("filterData", filterData);
-    console.log("indexA", indexA);
-    tasksCopy = arrayMove(tasksCopy, oldIndex, newIndex);
-    console.log("is tasksCopy", tasksCopy.length);
-
-    setLinkAttribute(tasksCopy);
-    //const linkAttr = linkGroups.filter((items)=>)
+  const dragEnter = (e, position) => {
+    dragOverItem.current = position;
   };
+
+  const drop = (e) => {
+    const copyListItems = [...list];
+    const dragItemContent = copyListItems[dragItem.current];
+    copyListItems.splice(dragItem.current, 1);
+    copyListItems.splice(dragOverItem.current, 0, dragItemContent);
+    dragItem.current = null;
+    dragOverItem.current = null;
+    setList(copyListItems);
+    setLinkGroups(copyListItems);
+  };
+
+  const dragStart1 = (e, position) => {
+    dragItemAttr.current = position;
+  };
+
+  const dragEnter1 = (e, position) => {
+    dragOverItemAttr.current = position;
+  };
+
+  const drop1 = (a) => {
+    const copyListItems = [...a];
+    const dragItemContent = copyListItems[dragItemAttr.current];
+    copyListItems.splice(dragItemAttr.current, 1);
+    copyListItems.splice(dragOverItemAttr.current, 0, dragItemContent);
+    dragItemAttr.current = null;
+    dragOverItemAttr.current = null;
+    console.log('linkGroups',linkGroups )
+    console.log('hello',copyListItems )
+    //setList(copyListItems);
+    //setLinkGroups(copyListItems);
+    // setLinkAttribute([
+    //   ...linkAttribute,
+    //   { Group: category.group, Attribute: copyListItems },
+    // ]);
+    
+
+  };
+
+  
 
   useEffect(() => {
-     dispatch(allGroup());
-     dispatch(allField());
-     dispatch(allCategories());
-
+    dispatch(allGroup());
+    dispatch(allField());
+    dispatch(allCategories());
   }, []);
 
-  let group = category.group
-  const indexOf = linkGroups.findIndex(item => item.Group === group);              
-  //  console.log("indexOf is", indexOf)
- 
-  
+    // useEffect(() => {
+  //   // debugger
+  //   setList(linkAttribute);
+  // }, [linkAttribute]);
+
+  useEffect(() => {
+    // debugger
+    setList(linkAttribute);
+  }, [linkAttribute]);
 
   return (
     <Layout>
       <Box className={classes.root}>
         <Paper className={classes.paper} elevation={0}>
           <Box className={classes.inputs}>
- 
-          <Grid container spacing={2}>
-           <Grid item xs={6}>
-           <Typography variant="h6"  sx={{ marginBottom: 2 }}>
-              Add Category
-            </Typography>
-            <TextField
-              type="text"
-              id="outlined-basic"
-              label="Category Name"
-              variant="outlined"
-              sx={{ width: "90%", marginBottom: 2 }}
-              name="categoryname"
-              value={category.categoryname}
-              onChange={handlecategory}
-            />
-            <Select
-              placeholder="Select Parent Category"
-              options={options}
-              defaultValue={category.parent}
-              onChange={handleChangeOpt}
-            />
-            
-            
-            <FormControl className={classes.radionBtns}>
-              <FormLabel id="demo-row-radio-buttons-group-label">
-                Status
-              </FormLabel>
-              <Box className={classes.statusBox}>
-                <Switch
-                  checked={category.status}
-                  name="status"
-                  value={category.status}
-                  inputProps={{ "aria-label": "controlled" }}
-                  onChange={handlerStatus}
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant="h6" sx={{ marginBottom: 2 }}>
+                  Add Categories
+                </Typography>
+                <TextField
+                  type="text"
+                  id="outlined-basic"
+                  label="Category Name"
+                  variant="outlined"
+                  sx={{ width: "90%", marginBottom: 2 }}
+                  name="categoryname"
+                  value={category.categoryname}
+                  onChange={handlecategory}
                 />
-                {category.status ? (
-                  <Typography
-                    variant="body1"
-                    componenet="p"
-                    className={classes.active}
-                  >
-                    active
-                  </Typography>
-                ) : (
-                  <Typography variant="body1" className={classes.inactive}>
-                    Inactive
-                  </Typography>
-                )}
-              </Box>
-            </FormControl>
-            
-            <Box
-              className="react_box"
-              sx={{
-                marginBottom: "5px",
-                display: "flex",
-                width: "100%",
-                maxWidth: "90%",
-              }}
-            >
-              <Select
-                placeholder="Select Group"
-                options={groupOptions}
-                defaultValue={category.group}
-                onChange={handleGroupChangeOpt}
-                
-              />
-              <Box className={classes.addgrpbuttons} sx={{ width: "32%" }}>
-                <Button
-                  sx={{
-                    marginLeft: "10px",
-                    marginTop: "10px",
-                    backgroundColor: "#808080",
-                  }}
-                  variant="contained"
-                  name="add_group"
-                  onClick={() => handleLinkGroupsAdd(indexOf)}
-                >
-                  Add Group
-                </Button>
-              </Box>
-            </Box>
-            <Box   className="react_box"
-              sx={{
-                marginBottom: "5px",
-                display: "flex",
-                width: "100%",
-                maxWidth: "90%",
-              }}
-            >
-              {category.group !=='' ?  
-              <>
-              <Select
-                placeholder="Select Attribute"
-                options={attributeOptions}
-                defaultValue={category.attribute}
-                onChange={(e) => handleAttributeChangeOpt(e)}
-               
-              />
-              <Box
-                className={classes.addgrpbuttons}
-                sx={{ width: "45%" }}
-              >
-                <Button
-                  sx={{
-                    marginLeft: "11px",
-                    marginTop: "10px",
-                    backgroundColor: "#808080",
-                  }}
-                  variant="contained"
-                  onClick={() =>
-                    handleLinkAttributeAdd()
-                  }
-                >
-                  Add Attribute
-                </Button>
-              </Box>
-              </> : null}
-              
-            </Box>
-      
-          </Grid>
-          <Grid item xs={6}>
-          <Button sx={{marginBottom:'10px '}}
-              variant="contained"
-              className={classes.stundentBtn}
-              onClick={() => handleAddCategory()}
-            >
-              Save Category
-            </Button>
-            <Box className="output" >
-              
-              {  linkGroups.map((value, index) => {
-                //console.log('index data is', index)
-                console.log("value", value)
-                //  console.log("linkGroups", linkGroups)
-                const ValueAddGrps = () => {
-                  let arr = groupOptions.filter(
-                    (items) => value.Group === items.value
-                  );
-                  for (let i = 0; i < arr.length; i++) {
-                    return  (
-                      <Box>
-                        {
-                           "Group : "+ arr[i].label
-                        }    
-                      </Box>
-                      );
-                  }
-                };
- 
-                return (
-                  <Box key={index} >
-                   {/* {category.group === value.Group ? console.log('ge') : null} */}
-                  
-                    <Box key={index}  sx={{ marginBottom:'5px', }} >
-                      <Groups linkGroups={linkGroups} ValueAddGrps={ValueAddGrps} 
-                       index={index} value={value} handleLinkGroupsRemove={handleLinkGroupsRemove} 
-                        attributeOptions={attributeOptions} handleLinkAttributeRemove={handleLinkAttributeRemove}
-                        setLinkGroups={setLinkGroups}/>
-                        {/* <Box className="groupbox">
-                          <Box className="grouptitle">
-                          {ValueAddGrps()}
-                        </Box>                     
-                        <Box className="groupicon">
-                          <RemoveIcon
-                          sx={{
-                            marginLeft: "20px",
-                            marginTop: "40px",
-                            color: "white",
-                            backgroundColor: "#808080",
-                            borderRadius: "50%",
-                          }}
-                          className="groupremoveicon"
-                          variant="contained"
-                          onClick={() => handleLinkGroupsRemove(index)}
-                          />
-                        </Box>
-                      </Box> */}
+                <Select
+                  placeholder="Select Parent Category"
+                  options={options}
+                  defaultValue={category.parent}
+                  onChange={handleChangeOpt}
+                />
 
-                     
-                    </Box>
-                      {/* <SortableAttributeList
-                        items={linkGroups[indexx].Attribute}
-                        onSortEnd={onSortAttributeEnd}
-                      /> */}
+                <FormControl className={classes.radionBtns}>
+                  <FormLabel id="demo-row-radio-buttons-group-label">
+                    Status
+                  </FormLabel>
+                  <Box className={classes.statusBox}>
+                    <Switch
+                      checked={category.status}
+                      name="status"
+                      value={category.status}
+                      inputProps={{ "aria-label": "controlled" }}
+                      onChange={handlerStatus}
+                    />
+                    {category.status ? (
+                      <Typography
+                        variant="body1"
+                        componenet="p"
+                        className={classes.active}
+                      >
+                        active
+                      </Typography>
+                    ) : (
+                      <Typography variant="body1" className={classes.inactive}>
+                        Inactive
+                      </Typography>
+                    )}
                   </Box>
-                  );
-              })
+                </FormControl>
 
-            } 
-              </Box>
-            {/* <Button
+                <Box
+                  className="react_box"
+                  sx={{
+                    marginBottom: "5px",
+                    display: "flex",
+                    width: "100%",
+                    maxWidth: "90%",
+                  }}
+                >
+                  <Select
+                    placeholder="Select Group"
+                    options={groupOptions}
+                    defaultValue={category.group}
+                    onChange={handleGroupChangeOpt}
+                  />
+                  <Box className={classes.addgrpbuttons} sx={{ width: "32%" }}>
+                    <Button
+                      sx={{
+                        marginLeft: "10px",
+                        marginTop: "10px",
+                        backgroundColor: "#808080",
+                      }}
+                      variant="contained"
+                      name="add_group"
+                      onClick={() => handleLinkGroupsAdd()}
+                    >
+                      Add Group
+                    </Button>
+                  </Box>
+                </Box>
+                <Box
+                  className="react_box"
+                  sx={{
+                    marginBottom: "5px",
+                    display: "flex",
+                    width: "100%",
+                    maxWidth: "90%",
+                  }}
+                >
+                  {category.group !== "" ? (
+                    <>
+                      <Select
+                        placeholder="Select Attribute"
+                        options={attributeOptions}
+                        defaultValue={category.attribute}
+                        onChange={(e) => handleAttributeChangeOpt(e)}
+                      />
+                      <Box
+                        className={classes.addgrpbuttons}
+                        sx={{ width: "45%" }}
+                      >
+                        <Button
+                          sx={{
+                            marginLeft: "11px",
+                            marginTop: "10px",
+                            backgroundColor: "#808080",
+                          }}
+                          variant="contained"
+                          onClick={() => handleLinkAttributeAdd()}
+                        >
+                          Add Attribute
+                        </Button>
+                      </Box>
+                    </>
+                  ) : null}
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  sx={{ marginBottom: "10px " }}
+                  variant="contained"
+                  className={classes.stundentBtn}
+                  onClick={() => handleAddCategory()}
+                >
+                  Save Category
+                </Button>
+
+                <Box className="output">
+                  {
+                  
+                  linkGroups?.map((value, index) => {  
+                     console.log("length",linkGroups)
+                    console.log("length",value.Group)
+                    const ValueAddGrps = () => {
+                       let k = groupOptions.find((items)=>items.value===value.Group).label
+                      console.log("kkkkk",k)
+                      return <Box>{"Group : " + k}</Box>;
+                     
+                    };
+                    return (
+                      <Box
+                        key={index}
+                        className="maingroup"
+                        // onDragStart={(e) => dragStart(e, index)}
+                        // onDragEnter={(e) => dragEnter(e, index)}
+                        // onDragEnd={drop}
+                        // draggable
+                      >
+                        <Box className="groupbox">
+                          <Box className="grouptitle">{ValueAddGrps()}</Box>
+                          <Box className="groupicon">
+                            <RemoveIcon
+                              sx={{
+                                marginLeft: "20px",
+                                marginTop: "40px",
+                                color: "white",
+                                backgroundColor: "#808080",
+                                borderRadius: "50%",
+                              }}
+                              className="groupremoveicon"
+                              variant="contained"
+                              onClick={() => handleLinkGroupsRemove(index)}
+                            />
+                          </Box>
+                        </Box>
+                        <AttributeComponent
+                          value={value}
+                          attributeOptions={attributeOptions}
+                          linkGroups={linkGroups}
+                          // setLinkGroups={setLinkGroups}
+                          // linkGroups={value.Group}
+                          // onDelete={(attribite,group)=deleteAttrb(attribite,group)}
+                        />
+                        {/* {list !== ""
+                          
+                          ? list?.map((subItems, subIndex) => {
+                            // debugger;
+                              const ValueAttribute = () => {
+                                let arr = attributeOptions.filter(
+                                  (items) => subItems.Attribute === items.value
+                                );
+                                for (let i = 0; i < arr.length; i++) {
+                                  return (
+                                    <Box>
+                                      {`${subIndex + 1}. :  ${arr[i].label}`}
+                                    </Box>
+                                  );
+                                }
+                              };
+                              return (
+                                // <AttributeComponent
+                                //       value={value}
+                                //       attributeOptions={attributeOptions}
+                                //       linkGroups={value.Group}
+                                //       subItems={subItems}
+                                //       ValueAttribute={ValueAttribute}
+                                //       // onDelete={(attribite,group)=deleteAttrb(attribite,group)}
+                                //     />
+                                <Box
+                                  className="mainattribute"
+                                  onDragStart={(e) => dragStart1(e, subIndex)}
+                                  onDragEnter={(e) => dragEnter1(e, subIndex)}
+                                  onDragEnd={drop1(value.Attribute)}
+                                  key={subIndex}
+                                  draggable
+                                >
+                                  <Box className="attributetitle">
+                                    {ValueAttribute()}
+                                  </Box>
+                                  <Box className="attributebutton">
+                                    <RemoveIcon
+                                      sx={{
+                                        marginLeft: "20px",
+                                        marginTop: "40px",
+                                        color: "white",
+                                        backgroundColor: "#808080",
+                                        borderRadius: "50%",
+                                      }}
+                                      className="groupremoveicon"
+                                      variant="contained"
+                                      onClick={() =>
+                                        handleLinkAttributeRemove(
+                                          subItems.Attribute,
+                                          value.Group
+                                        )
+                                      }
+                                      //  onClick={() => deleteAttrb(subItems.Attribute, value.Group)}
+                                    />
+                                  </Box>
+                                </Box>
+                              );
+                            })
+                          : null} */}
+                      </Box>
+                    );
+                  })}
+                </Box>
+
+                {/* <Groups linkGroups={linkGroups} groupOptions = {groupOptions} attributeOptions={attributeOptions} /> */}
+
+                {/* <Button
               variant="contained"
               className={classes.stundentBtn}
               onClick={() => handleAddCategory()}
             >
               Save Category
             </Button> */}
+              </Grid>
             </Grid>
-          </Grid>
           </Box>
         </Paper>
       </Box>
