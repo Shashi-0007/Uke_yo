@@ -6,11 +6,11 @@ import DataTableExtensions from "react-data-table-component-extensions";
 import { Paper } from '@mui/material';
 import "react-data-table-component-extensions/dist/index.css";
 import { useSelector,useDispatch } from 'react-redux';
-import { toggle } from '../../redux/action/Action';
 import {allCategories , deletefield ,editField , allField} from '../../redux/action/Action'
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
+import "../../App.css"
 
 
 
@@ -79,43 +79,21 @@ const AttributeTable = () => {
            selector: "feild_name",
            sortable: true
          },
-        //  {
-        //    name: "Attribute Type",
-        //    selector: "feild_type",
-        //    sortable: true
-        //  },
-         {
-           name: "Status",
-           selector: 'status',
-           sortable: true,
-           cell: ((row)=>{
-               
-             if(row.status==="0"){
-               return 'inactive'
-             }else if(row.status==="1"){
-               return 'active'
-             }else{
-             return  row.status
-             }
-           })
-         },
-         {
-           name : "Action",
-           selector: 'id',
-           sortable: false,
-           cell: (d) => [
-            <EditIcon onClick={()=>handleEdit(d.id)} />,
-            <DeleteIcon onClick={() => handleDelete(d.id)} />,
-          ],
-           
-         }
-       
+         , {
+          name: "Name Space",
+          selector: "feild_namespace",
+          sortable: true
+        },
+        ,{
+          name: "type",
+          selector: "feild_type",
+          sortable: true
+        },
        ];
    
 
       useEffect(()=>{
           setData(getAllAttributes)
-          dispatch(toggle())
       },[getAllAttributes])
        
    
@@ -142,7 +120,7 @@ const AttributeTable = () => {
      
     <>
     <Layout>
-       <div className={classes.root} >
+       <div className='root' >
 
           <div className={classes.student}>
               <Paper variant='outlined' className={classes.table}

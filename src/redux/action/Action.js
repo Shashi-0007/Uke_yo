@@ -7,6 +7,7 @@ import { baseURL} from '../../../src/Components/Api/BaseLine'
 
 
  export const toggle = () => {
+
     return{
         type:TOGGLE_ALL,
          payload:false,
