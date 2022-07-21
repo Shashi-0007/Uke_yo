@@ -12,8 +12,7 @@ import {allField} from '../../redux/action/Action'
 import { addGroup } from '../../redux/action/Action';
 import '../../App.css';
 import { useNavigate } from 'react-router-dom';
-
-
+import {  UpdateGroup,editGroup} from '../../redux/action/Action';
 
 
 
@@ -124,14 +123,17 @@ const useStyle = makeStyles((theme) => ({
 
 }))
 
-const AddGroup = (props) => {
+const EditGroupComp = (props) => {
 
-  const [txt, setTxt] = useState('');
+
   const toggleState = useSelector((state)=>state.togglingReducer.togglingAll)
+  const editGroups = useSelector((state)=>state.editGroupReducer.edit)
+  const [message, setMessage] = useState('') 
+  
 
   const classes = useStyle(props);
 
-const navigate = useNavigate()
+  const navigate = useNavigate()
   const dispatch = useDispatch();
 
 
@@ -143,7 +145,22 @@ const navigate = useNavigate()
     statusApi  : "0",
   });
 
-  //status     : false,
+
+  useEffect(()=>{
+    setGroup({
+      id :editGroups.id,
+      groupname  : editGroups.group_name,
+      groupdisplayname  : editGroups.group_display_name,
+      statusApi  : editGroups.status,
+      status     : editGroups.status==="0" ? false : true,
+    })
+    // let a={value:editGroups.parent_cat,label: 'Furniture'}
+    // handleChangeOpt(a)
+},[editGroups])
+
+
+
+
 
 
   const handlerStatus = (e) => {
@@ -199,17 +216,23 @@ const navigate = useNavigate()
     
     }
   }
-
   const handleAddGroup = () => {
+    let editdata ={id: editGroups.id}
+    dispatch(UpdateGroup(group))
+    .then(() => dispatch(editGroup(editdata))).then(()=>setMessage(' Group Updated Successfully'))
+  };
+  const EditGroupComp = () => {
    dispatch(addGroup(group));
   };
   
   let colon = "`[]";
   let regEx = `!@#$%^&*()_+1234567890-={}|:",./<>~;* ?'${colon}`;
 
+
   const handleCancel = () => {
-     navigate('/grouptable')
-   };
+    navigate('/grouptable')
+  };
+
   return (
     <Layout>
       <div className={classes.root}>
@@ -217,7 +240,7 @@ const navigate = useNavigate()
         <Paper className='paper' elevation={0}  style={{  transform: toggleState ? 'translate(10%)' : 'translate(0%)', marginRight:toggleState && 100  ,transition: '.3s all', }}>
           <Box className={classes.inputs}>
             <Typography variant="h5" component="h5"  className='heading'>
-              Add Group
+            Edit Group
             </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
@@ -295,7 +318,7 @@ const navigate = useNavigate()
               sx={{ background:'#138b13'}}
              className='btn'
             >
-              Save
+               Update
             </Button>
             <Button
               variant="contained"
@@ -315,4 +338,4 @@ const navigate = useNavigate()
   );
 };
 
-export default AddGroup;
+export default EditGroupComp;

@@ -155,7 +155,8 @@ const Uploadcsv = (props) => {
   return (
     <Layout>
       <div className={classes.root}>
-        <Paper className={classes.paper} elevation={5}>
+        
+        <Paper className='paper' elevation={0}>
           <Box className={classes.inputs}>
             <Typography variant="h5" component="h5" sx={{ marginBottom: 2 }}>
               Upload Product
