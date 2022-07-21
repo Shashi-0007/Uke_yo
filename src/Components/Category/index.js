@@ -52,6 +52,10 @@ const useStyle = makeStyles((theme) => ({
     },
   },
 
+  group_index :{
+   height:'2px'
+  },
+
   inputs: {
     height: "100%",
     display: "flex",
@@ -134,6 +138,9 @@ const AddCategory = (props) => {
   const dragOverItem = useRef();
   const dragItemAttr = useRef();
   const dragOverItemAttr = useRef();
+  const group_Index_Is = useRef();
+
+
   const [list, setList] = useState();
 
   const classes = useStyle(props);
@@ -141,36 +148,45 @@ const AddCategory = (props) => {
   const [checklist, setChecklist] = useState([]);
   const [category, setCategory] = useState({
     categoryname: "",
-    parent: 2,
-    checkbox: "",
+    parent: 0,
     status: false,
-    group: "",
-    attribute: "",
     statusApi: "0",
+    // checkbox: "",
+    // group: "",
+    // attribute: "",
   });
+  let ab =[]
+  const [indexxx, setIndexxx] = useState(ab);
+  
+
+  const [groupAttribute, setGroupAttribute] =useState({
+    group: "",
+    attribute: ""
+  })
+
+  // const [groupIndex, setGroupIndex] =useState({
+  //   // group_index:'',
+  // })
+
+ 
+   const [groupIndex, setGroupIndex] =useState({
+    group_index: ''
+   })
+
+   const [attributeIndex, setAttributeIndex] =useState({
+    attribute_index: ''
+   })
+
+   //('groupIndex is', groupIndex );
+
   const [linkGroups, setLinkGroups] = useState([]);
   const [linkAttribute, setLinkAttribute] = useState([]);
 
-  // const [category, setCategory] = useState({
-  //   categoryname: "",
-  //   parent: 2,
-  //   status: false,
-  //   statusApi: "0",
-  //   //group : '',
-  //   link :[{
-  //     group : '',
-  //     Attribute :  [{
-  //        Attribute : '',
-  //       }]
-  //   }]
-  // });
   const dispatch = useDispatch();
   const getAllCategory = useSelector(
     (state) => state.allCategoryReducer.categoryData
   );
   const getAllgroup = useSelector((state) => state.allGroupReducer.allData);
-
-
 
   const getAllAttributes = useSelector(
     (state) => state.allFieldsReducer.allData
@@ -234,7 +250,7 @@ const AddCategory = (props) => {
   };
 
   const handleGroupChangeOpt = (selectedGroupOptions) => {
-    setCategory((prev) => {
+    setGroupAttribute((prev) => {
       return {
         ...prev,
         //link : { group: selectedGroupOptions.value }
@@ -244,20 +260,20 @@ const AddCategory = (props) => {
   };
 
   const Attribute = [];
+  const DisplayOrder = [];
   const handleLinkGroupsAdd = () => {
-    if (category.group !== "") {
-      let group = category.group;
+    if (groupAttribute.group !== "") {
+      let group = groupAttribute.group;
       const indexOf = linkGroups?.findIndex((item) => item.Group === group);
       if (indexOf === -1) {
-        let groupis = category.link;
-        let a = { Group: category.group, Attribute };
+        let a = { Group: groupAttribute.group,  Attribute };
         setLinkGroups([...linkGroups, a]);
       }
     }
   };
 
   const handleAttributeChangeOpt = (selectedAttributeOption) => {
-    setCategory((old) => {
+    setGroupAttribute((old) => {
       return {
         ...old,
         attribute: selectedAttributeOption.value,
@@ -266,18 +282,16 @@ const AddCategory = (props) => {
   };
 
   const handleLinkAttributeAdd = () => {
-    if (category.attribute !== "") {
-      let c = { Attribute: category.attribute };
-      let group = category.group;
-      const filter = linkGroups.indexOf(group);
-
+    if (groupAttribute.attribute !== "") {
+      let group = groupAttribute.group;
       const index = linkGroups.findIndex((item) => item.Group === group);
+      let c = { Attribute: groupAttribute.attribute };
+      let d = { DisplayOrder: index };
       setLinkAttribute([
         ...linkAttribute,
-        { Group: group, Attribute: linkGroups[index].Attribute.push(c) },
+        { Group: group,  Attribute: linkGroups[index].Attribute.push(c) },
       ]);
     }
-    console.log("atatatata",linkGroups)
   };
 
 
@@ -293,12 +307,12 @@ const AddCategory = (props) => {
       itemis.Attribute.map((subItemis, index) => {
         if (itemis.Group === Group) {
           if (subItemis.Attribute === Attribute) {
-            // setLinkAttribute([
-            //   ...linkAttribute,
-            //   { Group: Group, Attribute: itemis.Attribute.splice(index, 1) },
-            // ]);
-            list.splice(index, 1);
-            setList(list);
+            setLinkAttribute([
+              ...linkAttribute,
+              { Group: Group, Attribute: itemis.Attribute.splice(index, 1) },
+            ]);
+            // list.splice(index, 1);
+            // setList(list);
           }
         }
       })
@@ -316,15 +330,17 @@ const AddCategory = (props) => {
     });
   };
 
-  const handleAddCategory = () => {
-    let Data = { category: category, link: linkGroups };
-    console.log('data is', Data)
+  const handlegroupIndex = (data, index) =>{
+    console.log('data of group_index is', data, index)
+    // if(data == ''){
+    //   setGroupIndex({group_index:index+1})
+    // }else{
+      setGroupIndex({group_index:data})
+    // }
 
-    // dispatch(addcategory(Data)).then(() => Navigate("/categorytable"));
+  }
 
-    // .then(()=> Navigate('/linkgroup'))
-  };
-console.log('list after updating is', list);
+console.log('..groupIndex', groupIndex);
 
   const dragStart = (e, position) => {
     dragItem.current = position;
@@ -360,8 +376,8 @@ console.log('list after updating is', list);
     copyListItems.splice(dragOverItemAttr.current, 0, dragItemContent);
     dragItemAttr.current = null;
     dragOverItemAttr.current = null;
-    console.log('linkGroups',linkGroups )
-    console.log('hello',copyListItems )
+    //console.log('linkGroups',linkGroups )
+    //console.log('hello',copyListItems )
     //setList(copyListItems);
     //setLinkGroups(copyListItems);
     // setLinkAttribute([
@@ -371,8 +387,21 @@ console.log('list after updating is', list);
     
 
   };
-
   
+
+  const handleAddCategory = () => {
+    let Data = {  Groups: linkGroups };
+    let Alldata = {...category, ...Data}
+    let GroupIndexis = {...groupIndex}
+    console.log('data is',  Alldata)
+    console.log('groupIndex is',  GroupIndexis)
+
+    // dispatch(addcategory(Data)).then(() => Navigate("/categorytable"));
+
+    // .then(()=> Navigate('/linkgroup'))
+  };
+
+ 
 
   useEffect(() => {
     dispatch(allGroup());
@@ -381,14 +410,16 @@ console.log('list after updating is', list);
   }, []);
 
     // useEffect(() => {
-  //   // debugger
   //   setList(linkAttribute);
   // }, [linkAttribute]);
 
   useEffect(() => {
-    // debugger
     setList(linkAttribute);
   }, [linkAttribute]);
+ 
+  
+  // console.log('group_Index_Is value is',group_Index_Is.current)
+  
 
   return (
     <Layout>
@@ -457,7 +488,7 @@ console.log('list after updating is', list);
                   <Select
                     placeholder="Select Group"
                     options={groupOptions}
-                    defaultValue={category.group}
+                    defaultValue={groupAttribute.group}
                     onChange={handleGroupChangeOpt}
                   />
                   <Box className={classes.addgrpbuttons} sx={{ width: "32%" }}>
@@ -484,12 +515,12 @@ console.log('list after updating is', list);
                     maxWidth: "90%",
                   }}
                 >
-                  {category.group !== "" ? (
+                  {groupAttribute.group !== "" ? (
                     <>
                       <Select
                         placeholder="Select Attribute"
                         options={attributeOptions}
-                        defaultValue={category.attribute}
+                        defaultValue={groupAttribute.attribute}
                         onChange={(e) => handleAttributeChangeOpt(e)}
                       />
                       <Box
@@ -526,14 +557,13 @@ console.log('list after updating is', list);
                   {
                   
                   linkGroups?.map((value, index) => {  
-                     console.log("length",linkGroups)
-                    console.log("length",value.Group)
                     const ValueAddGrps = () => {
                        let k = groupOptions.find((items)=>items.value===value.Group).label
-                      console.log("kkkkk",k)
+               
                       return <Box>{"Group : " + k}</Box>;
                      
                     };
+                    
                     return (
                       <Box
                         key={index}
@@ -544,7 +574,36 @@ console.log('list after updating is', list);
                         // draggable
                       >
                         <Box className="groupbox">
-                          <Box className="grouptitle">{ValueAddGrps()}</Box>
+                          <Box className="grouptitle" sx={{display:'flex'}}>
+                            {ValueAddGrps()}
+                           {/* <Typography sx={{marginLeft:1, float:'left', border:'1px solid black'}}>
+                             Position: {index}</Typography>  */}
+
+                          <Box sx={{marginLeft:2}}
+                            contentEditable="true"
+                            name='group_index'
+                            // onInput={(e) => //(e.currentTarget.textContent)}
+                            onInput={(e) => handlegroupIndex(e.currentTarget.textContent,index)}
+                            ref={group_Index_Is}
+                          >
+                            {index+1}
+                          </Box>
+                           {/* <TextField
+                              className='group_index2'
+                              type="text"
+                              // id="outlined-basic"
+                              // variant="outlined"
+                              name='group_index'
+                              sx={{ width: "50%", marginLeft: 2 }}
+                              //  value={index+1}
+                               value={groupIndex.group_index}
+                              // inputRef={(groupIndex) => groupIndex = index+1 }
+                             
+                              onChange={(e)=>handlegroupIndex(e,index)}
+                              // onChange={handlegroupIndex}
+                              
+                            /> */}
+                            </Box>
                           <Box className="groupicon">
                             <RemoveIcon
                               sx={{
@@ -568,9 +627,9 @@ console.log('list after updating is', list);
                           // linkGroups={value.Group}
                           // onDelete={(attribite,group)=deleteAttrb(attribite,group)}
                         />
-                        {/* {list !== ""
+                        {/* {value.Attribute !== ""
                           
-                          ? list?.map((subItems, subIndex) => {
+                          ? value.Attribute?.map((subItems, subIndex) => {
                             // debugger;
                               const ValueAttribute = () => {
                                 let arr = attributeOptions.filter(

@@ -47,7 +47,7 @@ const AttributeComponent = (props) => {
                 if (itemis.Group == Group) {
                     if (subItemis.Attribute === Attribute) {
                       list.splice(index, 1);
-                      // setList(list);
+                       setList(list);
                       
                     //     setList([
                     //     ...list,
