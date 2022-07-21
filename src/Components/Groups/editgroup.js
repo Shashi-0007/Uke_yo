@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Paper, Box, Button, Typography, TextField } from '@mui/material';
+import { Paper, Box, Button, Typography, TextField,Container ,Grid} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Layout from '../../Pages/Layout';
 import FormLabel from '@mui/material/FormLabel';
@@ -9,7 +9,10 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Select from 'react-select';
 import { useDispatch ,useSelector} from 'react-redux';
-import {  UpdateGroup,editGroup} from '../../redux/action/Action'
+import {  UpdateGroup,editGroup} from '../../redux/action/Action';
+import '../../App.css'
+import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -17,22 +20,18 @@ import {  UpdateGroup,editGroup} from '../../redux/action/Action'
 const useStyle = makeStyles((theme) => ({
   root: {
     width: '100%',
-    height: '700px',
     color: 'red',
     display: 'flex',
     alignItems: 'center',
     background: theme.palette.secondary.light,
     justifyContent: 'center',
     zIndex: -99,
-    '& .MuiPaper-root': {
-      width: '39%',
-      height: 'max-content',
-      paddingLeft:'15px',
-      paddingRight:'15px',
-      marginBottom:'10px',
-      padding: `${theme.spacing(2)} 0`,
-      [theme.breakpoints.down('lg')]: {
-        width: '70%',
+    "& .MuiPaper-root": {
+      width: "100%",
+      height: "max-content",
+      padding: `${theme.spacing(4)} 0`,
+      [theme.breakpoints.down("lg")]: {
+        width: "70%",
         padding: `${theme.spacing(2)} 0`,
       },
     },
@@ -124,10 +123,11 @@ const useStyle = makeStyles((theme) => ({
 }))
 
 const EditGroup = (props) => {
-  const [message, setMessage] = useState('')  
+  const [message, setMessage] = useState('') 
+  const navigate = useNavigate() 
   // const getAllCategory   = useSelector((state)=>state.allGroupReducer.categoryData)
   const editGroups = useSelector((state)=>state.editGroupReducer.edit)
- console.log('editGroups', editGroups );
+  const toggleState = useSelector((state)=>state.togglingReducer.togglingAll)
 
   const [txt, setTxt] = useState('');
 
@@ -216,13 +216,15 @@ const EditGroup = (props) => {
   let regEx = `!@#$%^&*()_+1234567890-={}|:",./<>~;* ?'${colon}`;
 
 
-  console.log('regEx',group)
+const handleCancel = () =>{
+   navigate('/grouptable')
+}
  
   return (
     <Layout>
       <div className={classes.root}>
-      
-        <Paper className={classes.paper} elevation={5}>
+      <Container fixed>
+        <Paper className='paper' elevation={0}   style={{ position: 'absolute', right: 0, left: toggleState ? 300 : 0, width:toggleState ? '80%' : '90%' ,transition: '.3s all', }}>
         {message !== '' ? 
         <Box className='hello'>
           <Stack sx={{ width: '100% !important', alignItems:'center'}} >
@@ -231,27 +233,31 @@ const EditGroup = (props) => {
           </Box>
           : null}
           <Box className={classes.inputs}>
-            <Typography variant="h5" component="h5" sx={{ marginBottom: 2 }}>
+            <Typography variant="h5" component="h5" sx={{ marginBottom: 2 }} className='heading'>
               Edit Group
             </Typography>
-            
-            <TextField
+          
+            <Grid container spacing={2}>
+                <Grid item xs={6}>
+                <TextField
               type="text"
               id="outlined-basic"
               label="Group Name"
               variant="outlined"
-              sx={{ width: "90%", marginBottom: 2 }}
+              sx={{ width: "100%", marginBottom: 2 }}
               name="groupname"
               value={group.groupname}
               onChange={handleStudent}
               
             />
-               <TextField
+                </Grid>
+                <Grid item xs={6}>
+                <TextField
               type="text"
               id="outlined-basic"
               label="Display Group Name"
               variant="outlined"
-              sx={{ width: "90%", marginBottom: 2 }}
+              sx={{ width: "100%", marginBottom: 2 }}
               name="groupdisplayname"
               value={group.groupdisplayname}
               onChange={handleStudent}
@@ -260,6 +266,8 @@ const EditGroup = (props) => {
               // }
               
             />
+                </Grid>
+              </Grid>
             <FormControl className={classes.radionBtns}>
               <FormLabel id="demo-row-radio-buttons-group-label">
                 Status
@@ -287,15 +295,25 @@ const EditGroup = (props) => {
                 )}
               </Box>
             </FormControl>
+            <Box className='btn_group'>
             <Button
               variant="contained"
-              className={classes.stundentBtn}
+              className='btn'
               onClick={handleAddGroup}
             >
               Update
             </Button>
+            <Button
+              variant="contained"
+              className='btn_cancel'
+              onClick={handleCancel}
+            >
+              cancel
+            </Button>
+            </Box>
           </Box>
         </Paper>
+        </Container>
       </div>
     </Layout>
   );

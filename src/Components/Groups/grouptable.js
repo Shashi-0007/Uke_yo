@@ -1,12 +1,11 @@
 import { makeStyles } from '@mui/styles';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect,useState,useMemo } from 'react';
 import Layout from '../../Pages/Layout';
 import Table from "react-data-table-component";
 import DataTableExtensions from "react-data-table-component-extensions";
-import { Paper, Box } from '@mui/material';
+import { Paper, Box ,Container} from '@mui/material';
 import "react-data-table-component-extensions/dist/index.css";
 import { useSelector,useDispatch } from 'react-redux';
-import { toggle } from '../../redux/action/Action';
 import {allGroup , deletecategory ,editcategory ,editGroup ,deleteGroup} from '../../redux/action/Action'
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -30,11 +29,12 @@ const GroupTable = () => {
 
   const [data,setData] = useState([])
   const [tableData,setTableData] = useState({})
+  const [handleToggle,setHandleToggle] = useState()
   const [deleteSuccess, setDeleteSuccess] = useState('')  
   const dispatch = useDispatch()
   const toggleState = useSelector((state)=>state.togglingReducer.togglingAll)
-
   const getAllgroup   = useSelector((state)=>state.allGroupReducer.allData)
+
   //console.log('groups',getAllgroup)
 
   const Navigate = useNavigate();
@@ -119,7 +119,6 @@ const GroupTable = () => {
 
       useEffect(()=>{
           setData(getAllgroup)
-          dispatch(toggle())
       },[getAllgroup])
        
       useEffect(()=>{
@@ -138,17 +137,20 @@ const GroupTable = () => {
         dispatch(allGroup())
        },[dispatch])
 
-       //console.log('data',getAllgroup)
-
+useEffect(()=>{
+  setHandleToggle(toggleState)
+},[])
   return (
      
     <>
     <Layout>
-       <div className={classes.root} >
+       <div className='root' >
 
           <div className={classes.student}>
+          <Container maxWidth={toggleState ? 'lg' : 'xl'} sx={{transition: '.3s all'}}>
               <Paper variant='outlined' className={classes.table}
-               style={{ position: 'absolute', right: 0, left: toggleState ? 300 : 0, width:toggleState ? '80%' : '90%' ,transition: '.3s all', }}>
+                style={{ position: 'absolute', right: 0, left: toggleState ? 300 : 0, width:toggleState ? '80%' : '90%' ,transition: '.3s all', }}>
+                {/* marginLeft:toggleState && 120 */}
                      <DataTableExtensions {...tableData} >
                         <Table
                           columns={columns}
@@ -161,6 +163,7 @@ const GroupTable = () => {
                         />
                       </DataTableExtensions>
                     </Paper>
+                    </Container >
           </div>
            </div> 
     </Layout>
