@@ -32,13 +32,14 @@ const NavBar = () => {
   const dispatch = useDispatch()
 
 const handleToggle = () => {
-   dispatch(toggle())
-   setSideBarToggle(!sideBarToggle)
+    dispatch(toggle())
 }
 
   return (
     <>
-    <Box sx={{ flexGrow: 1 }} style={{ position: 'absolute', right: 0, left: sideBarToggle ? 300 : 0, transition: '.3s all', }}>
+    <Box sx={{ flexGrow: 1 }} 
+    //  style={{ position: 'absolute', right: 0, left: sideBarToggle ? 300 : 0, transition: '.3s all', }}
+    >
       <AppBar position="static" >
         <Toolbar  className={classes.iconsButton}>
           <Box>
@@ -63,7 +64,7 @@ const handleToggle = () => {
         </Toolbar>
       </AppBar>
     
-        <MainSidebar state={sideBarToggle} /> 
+        <MainSidebar state={toggleAppBar} /> 
     </Box>
         </>
   );

@@ -18,6 +18,7 @@ import LinkAttribute from './Components/LinkAttribute';
 import LinkGroup from './Components/LinkGroup'
 import Uploadcsv from './Components/Product/productupload';
 import AddProduct from './Components/Add Product/addproduct';
+import EditGroupComp from './Components/Groups/EditGroupComp';
 // import ForTesting from './Components/Add Product/fortest';
 // import '../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 // import 'react-quill/dist/quill.snow.css';
@@ -31,6 +32,7 @@ const App = () => {
          <Route path='/' exact element={<Navigate to='/login' />} />
          <Route path='/login' exact element={<Login />} />
          <Route path='/header' exact element={<NavBar  />} />
+  
          <Route path='/addcategory' exact element={<AddCategory />} />
          <Route path='/editcategory' exact element={<EditCategory />} />
          <Route path='/addgroup' exact element={<AddGroup/>} /> 
@@ -41,7 +43,7 @@ const App = () => {
          <Route path='/attributestable' exact element={<AttributeTable/>} /> 
          <Route path='/editattributes' exact element={<EditAttribute/>} /> 
          <Route path='/grouptable' exact element={<GroupTable/>} /> 
-         <Route path='/editgroup' exact element={<EditGroup/>} /> 
+         <Route path='/editgroup' exact element={<EditGroupComp/>} /> 
          <Route path='/linkattribute' exact element={<LinkAttribute/>} /> 
          <Route path='/linkgroup' exact element={<LinkGroup/>} /> 
          <Route path='/productupload' exact element={<Uploadcsv/>} /> 

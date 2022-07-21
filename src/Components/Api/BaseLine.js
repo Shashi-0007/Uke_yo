@@ -1,1 +1,1 @@
-export const baseURL = 'https://cdc2-223-178-210-167.in.ngrok.io/'
+export const baseURL = "https://cdc2-223-178-210-167.in.ngrok.io/"
