@@ -332,21 +332,21 @@ const AddCategory = (props) => {
   };
 
 
-  const handleAddCategory = () => {
+  // const handleAddCategory = () => {
   
-    if(!category.categoryname && !category.parent){
+  //   if(!category.categoryname && !category.parent){
      
-      setMessage('Please fill the all inputs')
-    }else{
-      let Data = { category: category, link: linkGroups };
-      dispatch(addcategory(Data)).then(() => Navigate("/categorytable"));
-    }
+  //     setMessage('Please fill the all inputs')
+  //   }else{
+  //     let Data = { category: category, link: linkGroups };
+  //     dispatch(addcategory(Data)).then(() => Navigate("/categorytable"));
+  //   }
 
 
-    // .then(()=> Navigate('/linkgroup'))
-  };
+  //   .then(()=> Navigate('/linkgroup'))
+  // };
 console.log('list after updating is', !category.parent);
-=======
+
   const handlegroupIndex = (data, index) =>{
     console.log('data of group_index is', data, index)
     // if(data == ''){
@@ -419,11 +419,18 @@ console.log('list after updating is', !category.parent);
   
 
   const handleAddCategory = () => {
-    let Data = {  Groups: linkGroups };
-    let Alldata = {...category, ...Data}
-    let GroupIndexis = {...groupIndex}
-    console.log('data is',  Alldata)
-    console.log('groupIndex is',  GroupIndexis)
+    if(!category.categoryname && !category.parent){
+     
+      setMessage('Please fill the all inputs')
+    }else{
+      let Data = {  Groups: linkGroups };
+      let Alldata = {...category, ...Data}
+      let GroupIndexis = {...groupIndex}
+      console.log('data is',  Alldata)
+      console.log('groupIndex is',  GroupIndexis)
+      dispatch(addcategory(Alldata)).then(() => Navigate("/categorytable"));
+    }
+
 
     // dispatch(addcategory(Data)).then(() => Navigate("/categorytable"));
 
