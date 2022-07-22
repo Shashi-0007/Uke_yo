@@ -142,6 +142,7 @@ const AddCategory = (props) => {
 
 
   const [list, setList] = useState();
+  const [list1, setList1] = useState();
 
   const classes = useStyle(props);
   const Navigate = useNavigate();
@@ -155,10 +156,8 @@ const AddCategory = (props) => {
     // group: "",
     // attribute: "",
   });
-  let ab =[]
-  const [indexxx, setIndexxx] = useState(ab);
+ 
   
-
   const [groupAttribute, setGroupAttribute] =useState({
     group: "",
     attribute: ""
@@ -350,15 +349,18 @@ console.log('..groupIndex', groupIndex);
     dragOverItem.current = position;
   };
 
-  const drop = (e) => {
+  const drop = (a) => {
+    console.log('iytems', a+1)
+    let b =a+1
     const copyListItems = [...list];
     const dragItemContent = copyListItems[dragItem.current];
     copyListItems.splice(dragItem.current, 1);
     copyListItems.splice(dragOverItem.current, 0, dragItemContent);
     dragItem.current = null;
     dragOverItem.current = null;
-    setList(copyListItems);
-    setLinkGroups(copyListItems);
+    setList(copyListItems, b);
+    setLinkGroups(copyListItems, b);
+    console.log('dhnakjnsjn',copyListItems, b);
   };
 
   const dragStart1 = (e, position) => {
@@ -369,7 +371,9 @@ console.log('..groupIndex', groupIndex);
     dragOverItemAttr.current = position;
   };
 
-  const drop1 = (a) => {
+  const drop1 = (a, b, index) => {
+     console.log('items are are', a )
+    // console.log('b are are',  b)
     const copyListItems = [...a];
     const dragItemContent = copyListItems[dragItemAttr.current];
     copyListItems.splice(dragItemAttr.current, 1);
@@ -377,13 +381,19 @@ console.log('..groupIndex', groupIndex);
     dragItemAttr.current = null;
     dragOverItemAttr.current = null;
     //console.log('linkGroups',linkGroups )
-    //console.log('hello',copyListItems )
+    console.log('hello',copyListItems )
     //setList(copyListItems);
     //setLinkGroups(copyListItems);
     // setLinkAttribute([
     //   ...linkAttribute,
     //   { Group: category.group, Attribute: copyListItems },
     // ]);
+    setLinkAttribute([
+      ...linkAttribute,
+      { Group: b,  Attribute: copyListItems},
+    ]);
+    
+    console.log('hello sxasd',linkGroups )
     
 
   };
@@ -409,15 +419,17 @@ console.log('..groupIndex', groupIndex);
     dispatch(allCategories());
   }, []);
 
-    // useEffect(() => {
-  //   setList(linkAttribute);
-  // }, [linkAttribute]);
+    useEffect(() => {
+    setList1(linkAttribute);
+  }, [linkAttribute]);
 
   useEffect(() => {
-    setList(linkAttribute);
-  }, [linkAttribute]);
+    setList(linkGroups);
+  }, [linkGroups]);
  
   
+  // console.log('setList1 is',setList1)
+  // console.log('setList setList is',setList)
   // console.log('group_Index_Is value is',group_Index_Is.current)
   
 
@@ -570,7 +582,7 @@ console.log('..groupIndex', groupIndex);
                         className="maingroup"
                         // onDragStart={(e) => dragStart(e, index)}
                         // onDragEnter={(e) => dragEnter(e, index)}
-                        // onDragEnd={drop}
+                        // onDragEnd={()=>drop(index)}
                         // draggable
                       >
                         <Box className="groupbox">
@@ -656,7 +668,7 @@ console.log('..groupIndex', groupIndex);
                                   className="mainattribute"
                                   onDragStart={(e) => dragStart1(e, subIndex)}
                                   onDragEnter={(e) => dragEnter1(e, subIndex)}
-                                  onDragEnd={drop1(value.Attribute)}
+                                  onDragEnd={()=>drop1(value.Attribute, value.Group, index)}
                                   key={subIndex}
                                   draggable
                                 >
