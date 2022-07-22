@@ -145,11 +145,13 @@ const AddCategory = (props) => {
   const [list1, setList1] = useState();
 
   const classes = useStyle(props);
+  const [message, setMessage] = useState('') 
   const Navigate = useNavigate();
   const [checklist, setChecklist] = useState([]);
   const [category, setCategory] = useState({
     categoryname: "",
     parent: 0,
+
     status: false,
     statusApi: "0",
     // checkbox: "",
@@ -329,6 +331,22 @@ const AddCategory = (props) => {
     });
   };
 
+
+  const handleAddCategory = () => {
+  
+    if(!category.categoryname && !category.parent){
+     
+      setMessage('Please fill the all inputs')
+    }else{
+      let Data = { category: category, link: linkGroups };
+      dispatch(addcategory(Data)).then(() => Navigate("/categorytable"));
+    }
+
+
+    // .then(()=> Navigate('/linkgroup'))
+  };
+console.log('list after updating is', !category.parent);
+=======
   const handlegroupIndex = (data, index) =>{
     console.log('data of group_index is', data, index)
     // if(data == ''){
@@ -339,7 +357,8 @@ const AddCategory = (props) => {
 
   }
 
-console.log('..groupIndex', groupIndex);
+
+
 
   const dragStart = (e, position) => {
     dragItem.current = position;
@@ -436,7 +455,8 @@ console.log('..groupIndex', groupIndex);
   return (
     <Layout>
       <Box className={classes.root}>
-        <Paper className={classes.paper} elevation={0}>
+        <Paper className='paper' elevation={0}>
+          <h4>{message}</h4>
           <Box className={classes.inputs}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -560,7 +580,7 @@ console.log('..groupIndex', groupIndex);
                   sx={{ marginBottom: "10px " }}
                   variant="contained"
                   className={classes.stundentBtn}
-                  onClick={() => handleAddCategory()}
+                  onClick={ handleAddCategory}
                 >
                   Save Category
                 </Button>

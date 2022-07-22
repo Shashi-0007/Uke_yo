@@ -7,15 +7,15 @@
   height: 40vmin;
   pointer-events: none;
 }
-.MuiContainer-root{
-  /* text-align: center!important; */
+/* .MuiContainer-root{
+  text-align: center!important;
 }
 .paper{
 
 
-  /* padding-top: 30px; */
-  /* padding: 100px 40px 0 40px!important; */
-}
+  padding-top: 30px;
+  padding: 100px 40px 0 40px!important;
+} */
 .makeStyles-root-38{
   width: 100%;
 }
@@ -48,9 +48,10 @@
 .css-1nrlq1o-MuiFormControl-root{
   width: 100%;
 }
-.routes_data{
-  width: 40%!important;
-  float: right!important;
+
+.product_input_file{
+  display: flex;
+  justify-content: center;
 }
 
 

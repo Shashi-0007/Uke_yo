@@ -21,16 +21,17 @@ import { useSelector } from 'react-redux';
 const SideBar = ({ sidebarData }) => {
 
     const toggleAppBar = useSelector((state)=>state.togglingReducer.togglingAll)
-
+    // sidebarData?.filter((item,i)=>console.log(item))
     const [open, setOpen] = useState(false)
     const handleClick = () => {
-      
-            setOpen(!open)
-       
+      if(toggleAppBar){
+        setOpen(!open)
+      }else {
+        setOpen(open)
+      }
       
     }
-    console.log('open',toggleAppBar)
-
+ 
     return (
         <>
             <Box >
@@ -59,12 +60,12 @@ const SideBar = ({ sidebarData }) => {
                                            {subItems.text==='' ? null :  <ListItemText primary={subItems?.text} />}
                                         </ListItemButton> }
                                  
-                                        {subItems.text==='' ? null :  <ListItemButton sx={{ pl: 4 }} component={NavLink} to={`/${subItems?.pathName2}`} >
+                                        {subItems.state ?    subItems.text==='' ? null :  <ListItemButton sx={{ pl: 4 }} component={NavLink} to={`/${subItems?.pathName2}`} >
                                       <ListItemIcon>
                                                 <AddCircleOutlineIcon />
                                                 </ListItemIcon> 
                                                 <ListItemText primary={subItems?.text2} />
-                                            </ListItemButton> }
+                                            </ListItemButton>  : null}
                                       
                                         {
                                         subItems.id === 3 && subItems.text3  ? 
