@@ -8,6 +8,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 // import 'react-data-table-component-extensions/dist/index.css';
 import store from './redux/Store';
 import { Provider } from 'react-redux';
+import './App.css';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

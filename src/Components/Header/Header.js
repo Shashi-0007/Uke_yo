@@ -13,7 +13,7 @@ import {toggle} from '../../redux/action/Action'
 
 const useStyle = makeStyles((theme)=>({
    root:{
-    height:'90%',
+    height:'100%',
    position:'absolute',
     overflow:'hidden',
     width:300,
@@ -30,11 +30,11 @@ const useStyle = makeStyles((theme)=>({
 
 
 const schoolData = [
-    { id: 1, name: 'Groups', icon: <SubjectIcon />, package: [{ id:1, text: 'All Group', text2: 'Add Group',pathName:'grouptable', pathName2: 'addgroup'}] },
+    { id: 1, name: 'Groups', icon: <SubjectIcon />, package: [{ id:1, text: 'All Group', text2: 'Add Group',pathName:'grouptable', pathName2: 'addgroup',state: true }] },
     { id: 2, name: 'Attributes', icon: <ArticleIcon />, package: [{ id:2, text: '',text2: '', pathName2: 'addattributes',pathName: 'attributestable' }] },
-    { id: 3, name: 'Categories', icon: <CategoryIcon />, package: [{ id:3, text: 'All Category', text2: 'Add New Category', text3: 'Link Group ', text4: 'Link Attribute',state: true, data: 'false', pathName:'categorytable', 
-    pathName2: 'addcategory',pathName3:'linkgroup',pathName4:'linkattribute' }] },
-    { id: 4, name: 'Product', icon: <SubjectIcon />, package: [{ id:4, text: 'Upload CSV',pathName:'productupload'}] },
+    { id: 3, name: 'Categories', icon: <CategoryIcon />, package: [{ id:3, text: 'All Category', text2: 'Add New Category',state: true, data: 'false', pathName:'categorytable', 
+    pathName2: 'addcategory', }] },
+    { id: 4, name: 'Product', icon: <SubjectIcon />, package: [{ id:4, text:'Upload CSV',pathName:'productupload',state: false }] },
 
 
     // { id: 4, name: 'Questions', icon: <QuestionAnswerIcon />, package: [{ text: 'All Question', text2: 'Add New Question', pathName2: 'addquestion'}] },

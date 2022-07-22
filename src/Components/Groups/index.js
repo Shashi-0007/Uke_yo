@@ -10,7 +10,7 @@ import { useDispatch ,useSelector} from 'react-redux';
 import {addcategory} from '../../redux/action/Action'
 import {allField} from '../../redux/action/Action'
 import { addGroup } from '../../redux/action/Action';
-import '../../App.css';
+
 import { useNavigate } from 'react-router-dom';
 
 
@@ -126,7 +126,7 @@ const useStyle = makeStyles((theme) => ({
 
 const AddGroup = (props) => {
 
-  const [txt, setTxt] = useState('');
+  const [massage, setMessage] = useState('');
   const toggleState = useSelector((state)=>state.togglingReducer.togglingAll)
 
   const classes = useStyle(props);
@@ -201,7 +201,12 @@ const navigate = useNavigate()
   }
 
   const handleAddGroup = () => {
-   dispatch(addGroup(group));
+    if(!group.groupname && !group.groupdisplayname ){
+      setMessage('Please fill the all input')
+    }else{
+      dispatch(addGroup(group));
+    }
+
   };
   
   let colon = "`[]";
@@ -213,8 +218,11 @@ const navigate = useNavigate()
   return (
     <Layout>
       <div className={classes.root}>
+      
       <Container fixed>
+    
         <Paper className='paper' elevation={0}  style={{  transform: toggleState ? 'translate(10%)' : 'translate(0%)', marginRight:toggleState && 100  ,transition: '.3s all', }}>
+        <h4>{massage}</h4>
           <Box className={classes.inputs}>
             <Typography variant="h5" component="h5"  className='heading'>
               Add Group

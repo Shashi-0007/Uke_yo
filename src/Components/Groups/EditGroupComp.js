@@ -10,7 +10,7 @@ import { useDispatch ,useSelector} from 'react-redux';
 import {addcategory} from '../../redux/action/Action'
 import {allField} from '../../redux/action/Action'
 import { addGroup } from '../../redux/action/Action';
-import '../../App.css';
+
 import { useNavigate } from 'react-router-dom';
 import {  UpdateGroup,editGroup} from '../../redux/action/Action';
 
@@ -216,10 +216,16 @@ const EditGroupComp = (props) => {
     
     }
   }
+
   const handleAddGroup = () => {
-    let editdata ={id: editGroups.id}
-    dispatch(UpdateGroup(group))
-    .then(() => dispatch(editGroup(editdata))).then(()=>setMessage(' Group Updated Successfully'))
+    if(!group.groupname && !group.groupdisplayname ){
+      setMessage('Please fill the all inputs')
+    }else{
+      let editdata ={id: editGroups.id}
+      dispatch(UpdateGroup(group))
+      .then(() => dispatch(editGroup(editdata))).then(()=>setMessage(' Group Updated Successfully'))
+    }
+    
   };
   const EditGroupComp = () => {
    dispatch(addGroup(group));
@@ -237,7 +243,9 @@ const EditGroupComp = (props) => {
     <Layout>
       <div className={classes.root}>
       <Container fixed>
+    
         <Paper className='paper' elevation={0}  style={{  transform: toggleState ? 'translate(10%)' : 'translate(0%)', marginRight:toggleState && 100  ,transition: '.3s all', }}>
+        <h4>{message}</h4>
           <Box className={classes.inputs}>
             <Typography variant="h5" component="h5"  className='heading'>
             Edit Group

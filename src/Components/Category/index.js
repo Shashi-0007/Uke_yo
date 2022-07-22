@@ -137,11 +137,12 @@ const AddCategory = (props) => {
   const [list, setList] = useState();
 
   const classes = useStyle(props);
+  const [message, setMessage] = useState('') 
   const Navigate = useNavigate();
   const [checklist, setChecklist] = useState([]);
   const [category, setCategory] = useState({
     categoryname: "",
-    parent: 2,
+    parent: 0,
     checkbox: "",
     status: false,
     group: "",
@@ -277,7 +278,7 @@ const AddCategory = (props) => {
         { Group: group, Attribute: linkGroups[index].Attribute.push(c) },
       ]);
     }
-    console.log("atatatata",linkGroups)
+   
   };
 
 
@@ -317,14 +318,19 @@ const AddCategory = (props) => {
   };
 
   const handleAddCategory = () => {
-    let Data = { category: category, link: linkGroups };
-    console.log('data is', Data)
+  
+    if(!category.categoryname && !category.parent){
+     
+      setMessage('Please fill the all inputs')
+    }else{
+      let Data = { category: category, link: linkGroups };
+      dispatch(addcategory(Data)).then(() => Navigate("/categorytable"));
+    }
 
-    // dispatch(addcategory(Data)).then(() => Navigate("/categorytable"));
 
     // .then(()=> Navigate('/linkgroup'))
   };
-console.log('list after updating is', list);
+console.log('list after updating is', !category.parent);
 
   const dragStart = (e, position) => {
     dragItem.current = position;
@@ -393,7 +399,8 @@ console.log('list after updating is', list);
   return (
     <Layout>
       <Box className={classes.root}>
-        <Paper className={classes.paper} elevation={0}>
+        <Paper className='paper' elevation={0}>
+          <h4>{message}</h4>
           <Box className={classes.inputs}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -517,7 +524,7 @@ console.log('list after updating is', list);
                   sx={{ marginBottom: "10px " }}
                   variant="contained"
                   className={classes.stundentBtn}
-                  onClick={() => handleAddCategory()}
+                  onClick={ handleAddCategory}
                 >
                   Save Category
                 </Button>
