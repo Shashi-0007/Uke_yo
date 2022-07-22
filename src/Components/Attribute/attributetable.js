@@ -76,17 +76,17 @@ const AttributeTable = () => {
         }
          , {
            name: "Attribute Name",
-           selector: "feild_name",
+           selector: "AttributeName",
            sortable: true
          },
          , {
           name: "Name Space",
-          selector: "feild_namespace",
+          selector: "AttributeNameSpace",
           sortable: true
         },
         ,{
           name: "type",
-          selector: "feild_type",
+          selector: "AttributeType",
           sortable: true
         },
        ];
@@ -130,7 +130,7 @@ const AttributeTable = () => {
                           columns={columns}
                           data={data}
                           noHeader
-                          defaultSortField="id"
+                          defaultSortField="AttributeID"
                           defaultSortAsc={false}
                           pagination
                           highlightOnHover
