@@ -14,6 +14,7 @@ import { NavLink } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CircleIcon from '@mui/icons-material/Circle';
 import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 
 
@@ -21,17 +22,24 @@ import { useSelector } from 'react-redux';
 const SideBar = ({ sidebarData }) => {
 
     const toggleAppBar = useSelector((state)=>state.togglingReducer.togglingAll)
-    // sidebarData?.filter((item,i)=>console.log(item))
+
     const [open, setOpen] = useState(false)
     const handleClick = () => {
       if(toggleAppBar){
         setOpen(!open)
       }else {
-        setOpen(open)
+        setOpen(false)
       }
-      
     }
+    useEffect(()=>{
+        if(toggleAppBar){
+            setOpen(null)
+        }else{
+            setOpen(false) 
+        }
+    },[toggleAppBar])
  
+
     return (
         <>
             <Box >

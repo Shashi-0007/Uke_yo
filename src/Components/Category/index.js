@@ -419,19 +419,21 @@ console.log('list after updating is', !category.parent);
   
 
   const handleAddCategory = () => {
-    if(!category.categoryname && !category.parent){
-     
-      setMessage('Please fill the all inputs')
+    if(!category.categoryname && !category.parent) {
+      setMessage('please fill all input')
+    }else if(!category.categoryname){
+      setMessage('please fill category input')
+    }else if(!category.parent){
+      setMessage('please select any parent ')
     }else{
       let Data = {  Groups: linkGroups };
       let Alldata = {...category, ...Data}
       let GroupIndexis = {...groupIndex}
       console.log('data is',  Alldata)
       console.log('groupIndex is',  GroupIndexis)
-      dispatch(addcategory(Alldata)).then(() => Navigate("/categorytable"));
+      dispatch(addcategory(Alldata))
     }
-
-
+   
     // dispatch(addcategory(Data)).then(() => Navigate("/categorytable"));
 
     // .then(()=> Navigate('/linkgroup'))
@@ -623,7 +625,7 @@ console.log('list after updating is', !category.parent);
                             name='group_index'
                             // onInput={(e) => //(e.currentTarget.textContent)}
                             onInput={(e) => handlegroupIndex(e.currentTarget.textContent,index)}
-                            ref={group_Index_Is}
+                           
                           >
                             {index+1}
                           </Box>

@@ -201,9 +201,14 @@ const navigate = useNavigate()
   }
 
   const handleAddGroup = () => {
-    if(!group.groupname && !group.groupdisplayname ){
-      setMessage('Please fill the all input')
+    if(!group.groupname && !group.groupdisplayname) {
+      setMessage('please fill all input')
+    }else if(!group.groupname){
+      setMessage('please fill group input')
+    }else if(!group.groupdisplayname){
+      setMessage('please fill the group name input')
     }else{
+      setMessage('Add group successfully')
       dispatch(addGroup(group));
     }
 
