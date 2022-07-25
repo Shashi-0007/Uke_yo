@@ -29,7 +29,6 @@ const SideBar = ({ sidebarData }) => {
       }else {
         setOpen(open)
       }
-      
     }
  
     return (

@@ -28,6 +28,7 @@ import {
 } from "react-sortable-hoc";
 import Groups from "./groupComponent";
 import AttributeComponent from "./attributeComponent";
+import Draggable from "react-draggable";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -419,22 +420,20 @@ console.log('list after updating is', !category.parent);
   
 
   const handleAddCategory = () => {
-    if(!category.categoryname && !category.parent){
-     
-      setMessage('Please fill the all inputs')
+    if(!category.categoryname && !category.parent) {
+      setMessage('please fill all input')
+    }else if(!category.categoryname){
+      setMessage('please fill category input')
+    }else if(!category.parent){
+      setMessage('please select any parent ')
     }else{
       let Data = {  Groups: linkGroups };
       let Alldata = {...category, ...Data}
       let GroupIndexis = {...groupIndex}
-      console.log('data is',  Alldata)
-      console.log('groupIndex is',  GroupIndexis)
-      dispatch(addcategory(Alldata)).then(() => Navigate("/categorytable"));
+      dispatch(addcategory(Alldata))
     }
+   
 
-
-    // dispatch(addcategory(Data)).then(() => Navigate("/categorytable"));
-
-    // .then(()=> Navigate('/linkgroup'))
   };
 
  
@@ -453,10 +452,7 @@ console.log('list after updating is', !category.parent);
     setList(linkGroups);
   }, [linkGroups]);
  
-  
-  // console.log('setList1 is',setList1)
-  // console.log('setList setList is',setList)
-  // console.log('group_Index_Is value is',group_Index_Is.current)
+
   
 
   return (
