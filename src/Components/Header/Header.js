@@ -54,6 +54,7 @@ const MainSidebar = () => {
       
      }
     return (
+        
             <Box className={classes.root} sx={{width: toggleAppBar ? 250 : 60}}  onClick={handleToggle}>
                 {schoolData.map((elem, i) => <SideBar key={i}  sidebarData={elem} />)}
             </Box>

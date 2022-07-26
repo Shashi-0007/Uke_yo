@@ -32,10 +32,7 @@ const useStyle = makeStyles((theme) => ({
       width: "100%",
       height: "max-content",
       padding: `${theme.spacing(4)} 0`,
-      [theme.breakpoints.down("lg")]: {
-        width: "70%",
-        padding: `${theme.spacing(2)} 0`,
-      },
+
     },
 
   },
@@ -314,7 +311,6 @@ const navigate = useNavigate()
               variant="contained"
               onClick={handleCancel}
               className='btn_cancel'
-              sx={{marginLeft:"20px ", background:'#ec4343'}}
             >
               Cancel
             </Button>
