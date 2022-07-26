@@ -470,7 +470,7 @@ const AddCategory = (props) => {
   };
 }
 
-}
+
 
   useEffect(() => {
     dispatch(allGroup());
@@ -770,5 +770,5 @@ const AddCategory = (props) => {
     </Layout>
   );
 
-
+          }      
 export default AddCategory;
