@@ -468,6 +468,7 @@ const AddCategory = (props) => {
    
 
   };
+}
 
  
 
@@ -769,5 +770,6 @@ const AddCategory = (props) => {
     </Layout>
   );
 };
-}
+
+
 export default AddCategory;
