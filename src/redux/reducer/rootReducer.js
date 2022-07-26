@@ -1,4 +1,4 @@
-import {allCategoryReducer , deleteCategoryReducer , editcategoryReducer , editfieldReducer ,
+import {allCategoryReducer , deleteCategoryReducer , editcategoryReducer, UpdateCategoryReducer, editfieldReducer ,
      allFieldsReducer , deleteFieldsReducer ,allGroupReducer ,deleteGroupReducer ,editGroupReducer, UpdateGroupReducer
     } from './Reducer'
 import {togglingReducer} from './Reducer'
@@ -9,6 +9,7 @@ const rootReducer = combineReducers({
     allCategoryReducer,
     deleteCategoryReducer,
     editcategoryReducer,
+    UpdateCategoryReducer,
     editfieldReducer,
     allFieldsReducer,
     deleteFieldsReducer,

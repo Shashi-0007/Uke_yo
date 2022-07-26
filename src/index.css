@@ -62,8 +62,10 @@ code {
     border-bottom: 1px solid #ddd;
 }
 .attributetitle{
-  width: 85%;
-    float: left;
+  width: 85%!important;
+    float: left!important;
+    flex-basis: auto;
+  
 }
 
 /* Modal styling */

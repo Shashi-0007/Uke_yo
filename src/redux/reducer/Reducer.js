@@ -1,6 +1,7 @@
 import {TOGGLE_ALL} from '../actionType/Types';
-import {ALLCATEGORIES,ADDCATEGORIES , DELETECATEGORIES ,EDITCATEGORIES , EDITFIELD , ADDFIELD , ALLFIELDS ,
-    DELETEFIELD, ADDGROUP, DELETEGROUP, ALLGROUP, EDITGROUP, UPDATEGROUP} 
+import {ALLCATEGORIES,ADDCATEGORIES , DELETECATEGORIES ,EDITCATEGORIES , EDITFIELD, UPDATECATRGORY,
+     ADDFIELD , ALLFIELDS , DELETEFIELD, 
+     ADDGROUP, DELETEGROUP, ALLGROUP, EDITGROUP, UPDATEGROUP} 
 from '../actionType/Types'
 
 const inialState   = {categoryData:[]}
@@ -63,6 +64,19 @@ const editcategoryReducer = (state=InitialData,action) =>{
         case EDITCATEGORIES : return {
             ...state,
             editcategory : action.payload
+        }
+        default : return{
+            ...state
+        }
+    }
+}
+
+//UPDATECATRGORY
+const UpdateCategoryReducer = (state=UpdateInitData,action) =>{
+    switch(action.type){
+        case UPDATECATRGORY : return {
+            ...state,
+            update : action.payload
         }
         default : return{
             ...state
@@ -168,6 +182,6 @@ const UpdateGroupReducer = (state=UpdateInitData,action) =>{
     }
 }
 
-export {togglingReducer,allCategoryReducer,deleteCategoryReducer,editcategoryReducer ,
+export {togglingReducer,allCategoryReducer,deleteCategoryReducer,editcategoryReducer, UpdateCategoryReducer,
      editfieldReducer , allFieldsReducer , deleteFieldsReducer ,
      allGroupReducer ,deleteGroupReducer ,editGroupReducer, UpdateGroupReducer   } ;
