@@ -149,7 +149,7 @@ useEffect(()=>{
           <div className={classes.student}>
           <Container maxWidth={toggleState ? 'lg' : 'xl'} sx={{transition: '.3s all'}}>
               <Paper variant='outlined' className={classes.table}
-                style={{ position: 'absolute', right: 0, left: toggleState ? 300 : 0, width:toggleState ? '80%' : '90%' ,transition: '.3s all', }}>
+                style={{ position: 'absolute', right: 0, left: toggleState ? 280 : 0, width:toggleState ? '80%' : '90%' ,transition: '.3s all', }}>
                 {/* marginLeft:toggleState && 120 */}
                      <DataTableExtensions {...tableData} >
                         <Table

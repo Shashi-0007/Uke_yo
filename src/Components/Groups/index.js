@@ -32,10 +32,7 @@ const useStyle = makeStyles((theme) => ({
       width: "100%",
       height: "max-content",
       padding: `${theme.spacing(4)} 0`,
-      [theme.breakpoints.down("lg")]: {
-        width: "70%",
-        padding: `${theme.spacing(2)} 0`,
-      },
+
     },
 
   },
@@ -201,9 +198,14 @@ const navigate = useNavigate()
   }
 
   const handleAddGroup = () => {
-    if(!group.groupname && !group.groupdisplayname ){
-      setMessage('Please fill the all input')
+    if(!group.groupname && !group.groupdisplayname) {
+      setMessage('please fill all input')
+    }else if(!group.groupname){
+      setMessage('please fill group input')
+    }else if(!group.groupdisplayname){
+      setMessage('please fill the group name input')
     }else{
+      setMessage('Add group successfully')
       dispatch(addGroup(group));
     }
 
@@ -309,7 +311,6 @@ const navigate = useNavigate()
               variant="contained"
               onClick={handleCancel}
               className='btn_cancel'
-              sx={{marginLeft:"20px ", background:'#ec4343'}}
             >
               Cancel
             </Button>

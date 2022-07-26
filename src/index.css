@@ -32,6 +32,9 @@ code {
 .groupremoveicon{
   padding: 0 !important;
   margin: 0 10px !important;
+  color: white;
+  background-color: #808080;
+  border-radius: 50%;
 }
 .groupicon{
   text-align: right;

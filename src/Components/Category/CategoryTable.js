@@ -150,7 +150,7 @@ const CategoryTable = () => {
 
           <div className={classes.student}>
               <Paper variant='outlined' className={classes.table}
-               style={{ position: 'absolute', right: 0, left: toggleState ? 300 : 0, width:toggleState ? '80%' : '90%' ,transition: '.3s all', }}>
+               style={{ position: 'absolute', right: 0, left: toggleState ? 280 : 0, width:toggleState ? '80%' : '90%' ,transition: '.3s all', }}>
                      <DataTableExtensions {...tableData} >
                         <Table
                           columns={columns}
