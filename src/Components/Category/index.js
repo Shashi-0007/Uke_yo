@@ -446,7 +446,6 @@ const AddCategory = (props) => {
     dispatch(allField());
     dispatch(allCategories());
   }, []);
-
   useEffect(() => {
     setList1(linkAttribute);
   }, [linkAttribute]);
