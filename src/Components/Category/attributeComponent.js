@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef  } from "react";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { Paper,  Box,  Button, Typography,  TextField,  FormControlLabel,  Checkbox,  Grid} from "@mui/material";
+import {   Box,  Grid} from "@mui/material";
 
 
 
@@ -36,10 +36,10 @@ const AttributeComponent = (props) => {
       setList(copyListItems);
     };
   
-   
-    const handleLinkAttributeRemove = (Attribute, Group) => {
-      console.log('Index is ', Attribute, Group)
 
+
+    const handleLinkAttributeRemove = (Attribute, Group) => {
+      
       props.linkGroups?.map((itemis) =>{
             console.log('itemis ',itemis)
                 list.map((subItemis, index) => {
@@ -48,15 +48,11 @@ const AttributeComponent = (props) => {
                     if (subItemis.Attribute === Attribute) {
                       list.splice(index, 1);
                        setList(list);
-                      
-                    //     setList([
-                    //     ...list,
-                    //     { Group: Group, Attribute: itemis.Attribute.splice(index, 1) },
-                    // ]);
+                     
                     }
                 }
                 })
-   console.log('list after delete is', list);
+   console.log('list after delete', list);
 
             }
        );
@@ -98,25 +94,23 @@ const AttributeComponent = (props) => {
                     key={subIndex}
                     draggable
                     >
+                           <Grid container >
+                    <Grid item xs={10}>
                         <Box className="attributetitle">
                         {ValueAttribute()}
                         </Box>
+                        </Grid>
+                        <Grid item xs={2}>
                         <Box className="attributebutton">
                             <RemoveIcon
-                                sx={{
-                                marginLeft: "20px",
-                                marginTop: "40px",
-                                color: "white",
-                                backgroundColor: "#808080",
-                                borderRadius: "50%",
-                                }}
                                 className="groupremoveicon"
                                 variant="contained"
                                 // onClick={() => deleteAttrb(subItems.Attribute, props.value.Group)}
                                 onClick={() => handleLinkAttributeRemove(subItems.Attribute, props.value.Group)}
-
                             />
                         </Box>
+                        </Grid>
+                        </Grid>
                     </Box>
                   )
           
