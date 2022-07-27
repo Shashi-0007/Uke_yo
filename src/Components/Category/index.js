@@ -8,6 +8,7 @@ import {
   FormControlLabel,
   Checkbox,
   Grid,
+  Container,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Layout from "../../Pages/Layout";
@@ -28,6 +29,8 @@ import {
 } from "react-sortable-hoc";
 import Groups from "./groupComponent";
 import AttributeComponent from "./attributeComponent";
+import Draggable from "react-draggable";
+
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -52,6 +55,10 @@ const useStyle = makeStyles((theme) => ({
     },
   },
 
+  group_index: {
+    height: '2px'
+  },
+
   inputs: {
     height: "100%",
     display: "flex",
@@ -67,7 +74,7 @@ const useStyle = makeStyles((theme) => ({
       color: theme.palette.secondary.light,
     },
     "& .css-1nrlq1o-MuiFormControl-root": {
-      width: "90%",
+      width: "100%",
       display: "flex",
       justifyContent: "flex-start",
       marginBottom: theme.spacing(2),
@@ -75,7 +82,7 @@ const useStyle = makeStyles((theme) => ({
       fontWeight: 500,
     },
     "& .css-b62m3t-container": {
-      width: "90%",
+      width: "100%",
       marginBottom: 15,
       border: theme.palette.secondary.light,
       "& .css-1s2u09g-control": {
@@ -98,9 +105,9 @@ const useStyle = makeStyles((theme) => ({
       color: theme.palette.primary.green,
     },
     "& .css-1a25edt-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track":
-      {
-        background: theme.palette.primary.green,
-      },
+    {
+      background: theme.palette.primary.green,
+    },
     "& .makeStyles-inputs-20": {
       background: "red",
     },
@@ -134,43 +141,57 @@ const AddCategory = (props) => {
   const dragOverItem = useRef();
   const dragItemAttr = useRef();
   const dragOverItemAttr = useRef();
+  const group_Index_Is = useRef();
+  const toggleState = useSelector((state) => state.togglingReducer.togglingAll)
+
   const [list, setList] = useState();
+  const [list1, setList1] = useState();
 
   const classes = useStyle(props);
+  const [message, setMessage] = useState('')
   const Navigate = useNavigate();
   const [checklist, setChecklist] = useState([]);
   const [category, setCategory] = useState({
     categoryname: "",
-    parent: 2,
-    checkbox: "",
+    parent: 0,
+
     status: false,
-    group: "",
-    attribute: "",
     statusApi: "0",
+    // checkbox: "",
+    // group: "",
+    // attribute: "",
   });
+
+
+  const [groupAttribute, setGroupAttribute] = useState({
+    group: "",
+    attribute: ""
+  })
+
+  // const [groupIndex, setGroupIndex] =useState({
+  //   // group_index:'',
+  // })
+
+
+
+  const [groupIndex, setGroupIndex] = useState({
+    group_index: ''
+  })
+
+  const [attributeIndex, setAttributeIndex] = useState({
+    attribute_index: ''
+  })
+
+  //('groupIndex is', groupIndex );
+
   const [linkGroups, setLinkGroups] = useState([]);
   const [linkAttribute, setLinkAttribute] = useState([]);
 
-  // const [category, setCategory] = useState({
-  //   categoryname: "",
-  //   parent: 2,
-  //   status: false,
-  //   statusApi: "0",
-  //   //group : '',
-  //   link :[{
-  //     group : '',
-  //     Attribute :  [{
-  //        Attribute : '',
-  //       }]
-  //   }]
-  // });
   const dispatch = useDispatch();
   const getAllCategory = useSelector(
     (state) => state.allCategoryReducer.categoryData
   );
   const getAllgroup = useSelector((state) => state.allGroupReducer.allData);
-
-
 
   const getAllAttributes = useSelector(
     (state) => state.allFieldsReducer.allData
@@ -234,7 +255,7 @@ const AddCategory = (props) => {
   };
 
   const handleGroupChangeOpt = (selectedGroupOptions) => {
-    setCategory((prev) => {
+    setGroupAttribute((prev) => {
       return {
         ...prev,
         //link : { group: selectedGroupOptions.value }
@@ -244,20 +265,21 @@ const AddCategory = (props) => {
   };
 
   const Attribute = [];
+  const DisplayOrder = [];
   const handleLinkGroupsAdd = () => {
-    if (category.group !== "") {
-      let group = category.group;
+    if (groupAttribute.group !== "") {
+      let group = groupAttribute.group;
       const indexOf = linkGroups?.findIndex((item) => item.Group === group);
       if (indexOf === -1) {
-        let groupis = category.link;
-        let a = { Group: category.group, Attribute };
+        let a = { Group: groupAttribute.group, GroupIndex: '', Attribute };
         setLinkGroups([...linkGroups, a]);
       }
+
     }
   };
 
   const handleAttributeChangeOpt = (selectedAttributeOption) => {
-    setCategory((old) => {
+    setGroupAttribute((old) => {
       return {
         ...old,
         attribute: selectedAttributeOption.value,
@@ -266,18 +288,16 @@ const AddCategory = (props) => {
   };
 
   const handleLinkAttributeAdd = () => {
-    if (category.attribute !== "") {
-      let c = { Attribute: category.attribute };
-      let group = category.group;
-      const filter = linkGroups.indexOf(group);
-
+    if (groupAttribute.attribute !== "") {
+      let group = groupAttribute.group;
       const index = linkGroups.findIndex((item) => item.Group === group);
+      let c = { Attribute: groupAttribute.attribute };
+      let d = { DisplayOrder: index };
       setLinkAttribute([
         ...linkAttribute,
         { Group: group, Attribute: linkGroups[index].Attribute.push(c) },
       ]);
     }
-    console.log("atatatata",linkGroups)
   };
 
 
@@ -293,17 +313,17 @@ const AddCategory = (props) => {
       itemis.Attribute.map((subItemis, index) => {
         if (itemis.Group === Group) {
           if (subItemis.Attribute === Attribute) {
-            // setLinkAttribute([
-            //   ...linkAttribute,
-            //   { Group: Group, Attribute: itemis.Attribute.splice(index, 1) },
-            // ]);
-            list.splice(index, 1);
-            setList(list);
+            setLinkAttribute([
+              ...linkAttribute,
+              { Group: Group, Attribute: itemis.Attribute.splice(index, 1) },
+            ]);
+            // list.splice(index, 1);
+            // setList(list);
           }
         }
       })
     );
-    
+
   };
 
   const handlecategory = (e) => {
@@ -316,15 +336,34 @@ const AddCategory = (props) => {
     });
   };
 
-  const handleAddCategory = () => {
-    let Data = { category: category, link: linkGroups };
-    console.log('data is', Data)
 
-    // dispatch(addcategory(Data)).then(() => Navigate("/categorytable"));
+  // const handleAddCategory = () => {
 
-    // .then(()=> Navigate('/linkgroup'))
-  };
-console.log('list after updating is', list);
+  //   if(!category.categoryname && !category.parent){
+
+  //     setMessage('Please fill the all inputs')
+  //   }else{
+  //     let Data = { category: category, link: linkGroups };
+  //     dispatch(addcategory(Data)).then(() => Navigate("/categorytable"));
+  //   }
+
+
+  //   .then(()=> Navigate('/linkgroup'))
+  // };
+  // console.log('list after updating is', !category.parent);
+
+  const handlegroupIndex = (data, index) => {
+    console.log('data of group_index is', data, index)
+    // if(data == ''){
+    //   setGroupIndex({group_index:index+1})
+    // }else{
+    setGroupIndex({ group_index: data })
+    // }
+
+  }
+
+
+
 
   const dragStart = (e, position) => {
     dragItem.current = position;
@@ -334,15 +373,20 @@ console.log('list after updating is', list);
     dragOverItem.current = position;
   };
 
-  const drop = (e) => {
+  const drop = (a) => {
+    // console.log('items index ', a+1)
+    let b = a + 1
     const copyListItems = [...list];
     const dragItemContent = copyListItems[dragItem.current];
     copyListItems.splice(dragItem.current, 1);
     copyListItems.splice(dragOverItem.current, 0, dragItemContent);
     dragItem.current = null;
     dragOverItem.current = null;
-    setList(copyListItems);
+    // setList(copyListItems);
     setLinkGroups(copyListItems);
+    // console.log('dhnakjnsjn',copyListItems);
+    // console.log('list is is ',list);
+    // console.log('linkGroups is is ', linkGroups);
   };
 
   const dragStart1 = (e, position) => {
@@ -353,26 +397,72 @@ console.log('list after updating is', list);
     dragOverItemAttr.current = position;
   };
 
-  const drop1 = (a) => {
+  const drop1 = (a, b, index) => {
+    console.log('items are are', a)
+    console.log('index are are', index)
     const copyListItems = [...a];
     const dragItemContent = copyListItems[dragItemAttr.current];
     copyListItems.splice(dragItemAttr.current, 1);
     copyListItems.splice(dragOverItemAttr.current, 0, dragItemContent);
     dragItemAttr.current = null;
     dragOverItemAttr.current = null;
-    console.log('linkGroups',linkGroups )
-    console.log('hello',copyListItems )
+    //console.log('linkGroups',linkGroups )
+    console.log('hello', copyListItems)
     //setList(copyListItems);
     //setLinkGroups(copyListItems);
+
+    setLinkAttribute([
+      ...linkAttribute,
+      { Group: b, Attribute: copyListItems },
+    ]);
+    // setList1(copyListItems)
     // setLinkAttribute([
     //   ...linkAttribute,
-    //   { Group: category.group, Attribute: copyListItems },
+    //   { Group: b,  Attribute: linkGroups[index].Attribute.push(copyListItems) },
     // ]);
-    
+
+    // linkGroups.map((itemis) =>
+    // itemis.Attribute.map((subItemis, index) => {
+    //       setLinkAttribute([
+    //         ...linkAttribute,
+    //         { Group: b, Attribute: copyListItems },
+    //       ]);
+    //       // let a = { Group: b,  Attribute : copyListItems };
+    //       // setLinkGroups([...linkGroups, a]);
+
+    //   console.log('itemis.Attribute', itemis.Attribute, index)
+    //   console.log('linkGroups', linkGroups)
+    // })
+    // );
+
+    // console.log('hello sxasd',linkGroups )
+    // console.log('list1 is is',list1 )
+
 
   };
 
-  
+  const handleAddCategory = () => {
+    if (category.categoryname && !category.parent) {
+      setMessage('please fill all input')
+    } else if (!category.categoryname) {
+      setMessage('please fill group input')
+    } else if (!category.parent) {
+      setMessage('please fill the group name input')
+    } else {
+      setMessage('Add group successfully')
+      let Data = { Groups: linkGroups };
+      let Alldata = { ...category, ...Data }
+      let GroupIndexis = { ...groupIndex }
+
+      dispatch(addcategory(Alldata))
+
+    }
+
+  };
+
+
+
+
 
   useEffect(() => {
     dispatch(allGroup());
@@ -380,43 +470,56 @@ console.log('list after updating is', list);
     dispatch(allCategories());
   }, []);
 
-    // useEffect(() => {
-  //   // debugger
-  //   setList(linkAttribute);
+  //   useEffect(() => {
+  //   setList1(linkAttribute);
   // }, [linkAttribute]);
 
   useEffect(() => {
-    // debugger
-    setList(linkAttribute);
-  }, [linkAttribute]);
+    setList(linkGroups);
+  }, [linkGroups]);
+
+
+
+
+
 
   return (
     <Layout>
-      <Box className={classes.root}>
-        <Paper className={classes.paper} elevation={0}>
+      <Box className='root' >
+        <Container>
+        <Paper className='paper' elevation={0} style={{  transform: toggleState ? 'translate(15%)' : 'translate(6%)', marginRight:toggleState && 100  ,transition: '.3s all', }}>
+          <h4>{message}</h4>
           <Box className={classes.inputs}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Typography variant="h6" sx={{ marginBottom: 2 }}>
+           
+                <Typography variant="h6"  className='heading'>
                   Add Categories
                 </Typography>
-                <TextField
-                  type="text"
-                  id="outlined-basic"
-                  label="Category Name"
-                  variant="outlined"
-                  sx={{ width: "90%", marginBottom: 2 }}
-                  name="categoryname"
-                  value={category.categoryname}
-                  onChange={handlecategory}
-                />
-                <Select
-                  placeholder="Select Parent Category"
-                  options={options}
-                  defaultValue={category.parent}
-                  onChange={handleChangeOpt}
-                />
-
+                <Grid container spacing={4}>
+              <Grid item xs={8} >
+                <Grid>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <TextField
+                        type="text"
+                        id="outlined-basic"
+                        label="Category Name"
+                        variant="outlined"
+                         className="inputText"
+                        name="categoryname"
+                        value={category.categoryname}
+                        onChange={handlecategory}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Select
+                        placeholder="Select Parent Category"
+                        options={options}
+                        defaultValue={category.parent}
+                        onChange={handleChangeOpt}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
                 <FormControl className={classes.radionBtns}>
                   <FormLabel id="demo-row-radio-buttons-group-label">
                     Status
@@ -446,27 +549,24 @@ console.log('list after updating is', list);
                 </FormControl>
 
                 <Box
-                  className="react_box"
-                  sx={{
-                    marginBottom: "5px",
-                    display: "flex",
-                    width: "100%",
-                    maxWidth: "90%",
-                  }}
+                  
+
                 >
+                     <Grid container spacing={2}>
+                 <Grid item xs={9}>
+                  <Box>
                   <Select
                     placeholder="Select Group"
                     options={groupOptions}
-                    defaultValue={category.group}
+                    defaultValue={groupAttribute.group}
                     onChange={handleGroupChangeOpt}
                   />
-                  <Box className={classes.addgrpbuttons} sx={{ width: "32%" }}>
+                  </Box>
+                  </Grid>
+                  <Grid item xs={3}>
+                  <Box className={classes.addgrpbuttons} >
                     <Button
-                      sx={{
-                        marginLeft: "10px",
-                        marginTop: "10px",
-                        backgroundColor: "#808080",
-                      }}
+                      className="select_btn"
                       variant="contained"
                       name="add_group"
                       onClick={() => handleLinkGroupsAdd()}
@@ -474,145 +574,155 @@ console.log('list after updating is', list);
                       Add Group
                     </Button>
                   </Box>
+                  </Grid>
+                  </Grid>
                 </Box>
                 <Box
-                  className="react_box"
-                  sx={{
-                    marginBottom: "5px",
-                    display: "flex",
-                    width: "100%",
-                    maxWidth: "90%",
-                  }}
+                  className="inputText"
+
                 >
-                  {category.group !== "" ? (
+                  {groupAttribute.group !== "" ? (
                     <>
+                           <Grid container spacing={2}>
+                 <Grid item xs={9}>
+                    <Box className={classes.addgrpbuttons}>
                       <Select
                         placeholder="Select Attribute"
                         options={attributeOptions}
-                        defaultValue={category.attribute}
+                        defaultValue={groupAttribute.attribute}
                         onChange={(e) => handleAttributeChangeOpt(e)}
                       />
+                      </Box>
+                      </Grid>
+                      <Grid item xs={3}>
                       <Box
-                        className={classes.addgrpbuttons}
-                        sx={{ width: "45%" }}
                       >
                         <Button
-                          sx={{
-                            marginLeft: "11px",
-                            marginTop: "10px",
-                            backgroundColor: "#808080",
-                          }}
+                          className="select_btn"
                           variant="contained"
                           onClick={() => handleLinkAttributeAdd()}
                         >
                           Add Attribute
                         </Button>
                       </Box>
+                      </Grid>
+                      </Grid>
                     </>
                   ) : null}
                 </Box>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Button
                   sx={{ marginBottom: "10px " }}
                   variant="contained"
-                  className={classes.stundentBtn}
-                  onClick={() => handleAddCategory()}
+                  className='add_btn'
+                  onClick={handleAddCategory}
                 >
                   Save Category
                 </Button>
-
+                {/* <Box>
+                <Draggable handle="strong" >
+                  <Box className="box no-cursor">
+                    <strong className="cursor">
+                      <Box>==</Box>
+                    </strong>
+                    <Box >You  click my handle to drag me</Box>
+                  </Box>
+                  
+                </Draggable>
+              </Box> */}
                 <Box className="output">
                   {
-                  
-                  linkGroups?.map((value, index) => {  
-                     console.log("length",linkGroups)
-                    console.log("length",value.Group)
-                    const ValueAddGrps = () => {
-                       let k = groupOptions.find((items)=>items.value===value.Group).label
-                      console.log("kkkkk",k)
-                      return <Box>{"Group : " + k}</Box>;
-                     
-                    };
-                    return (
-                      <Box
-                        key={index}
-                        className="maingroup"
-                        // onDragStart={(e) => dragStart(e, index)}
-                        // onDragEnter={(e) => dragEnter(e, index)}
-                        // onDragEnd={drop}
-                        // draggable
-                      >
-                        <Box className="groupbox">
-                          <Box className="grouptitle">{ValueAddGrps()}</Box>
-                          <Box className="groupicon">
-                            <RemoveIcon
-                              sx={{
-                                marginLeft: "20px",
-                                marginTop: "40px",
-                                color: "white",
-                                backgroundColor: "#808080",
-                                borderRadius: "50%",
-                              }}
-                              className="groupremoveicon"
-                              variant="contained"
-                              onClick={() => handleLinkGroupsRemove(index)}
-                            />
+
+                    linkGroups?.map((value, index) => {
+                      const ValueAddGrps = () => {
+                        let k = groupOptions.find((items) => items.value === value.Group).label
+
+                        return <Box>{"Group : " + k}</Box>;
+
+                      };
+
+                      return (
+                        <Box
+                          key={index}
+                          className="maingroup"
+                          onDragStart={(e) => dragStart(e, index)}
+                          onDragEnter={(e) => dragEnter(e, index)}
+                          onDragEnd={() => drop(index)}
+                          draggable
+                        >
+                          <Box className="groupbox">
+                            <Box className="grouptitle" sx={{ display: 'flex',paddingLeft:'10px' }}>
+                              {ValueAddGrps()}
+                              <Box sx={{ marginLeft: 2 }}
+                                contentEditable="true"
+                                name='group_index'
+                                // onInput={(e) => //(e.currentTarget.textContent)}
+                                onInput={(e) => handlegroupIndex(e.currentTarget.textContent, index)}
+                                ref={group_Index_Is}
+                                key={index}
+                              >
+                                {index + 1}
+                              </Box>
+                              {/* <TextField
+                              className='group_index2'
+                              type="text"
+                              // id="outlined-basic"
+                              // variant="outlined"
+                              name='group_index'
+                              sx={{ width: "50%", marginLeft: 2 }}
+                              //  value={index+1}
+                               value={groupIndex.group_index}
+                              // inputRef={(groupIndex) => groupIndex = index+1 }
+                             
+                              onChange={(e)=>handlegroupIndex(e,index)}
+                              // onChange={handlegroupIndex}
+                              
+                            /> */}
+                            </Box>
+                            <Box className="groupicon">
+                              <RemoveIcon
+                              
+                                className="groupremoveicon"
+                                variant="contained"
+                                onClick={() => handleLinkGroupsRemove(index)}
+                              />
+                            </Box>
                           </Box>
-                        </Box>
-                        <AttributeComponent
+                          {/* <AttributeComponent
                           value={value}
                           attributeOptions={attributeOptions}
                           linkGroups={linkGroups}
                           // setLinkGroups={setLinkGroups}
                           // linkGroups={value.Group}
                           // onDelete={(attribite,group)=deleteAttrb(attribite,group)}
-                        />
-                        {/* {list !== ""
-                          
-                          ? list?.map((subItems, subIndex) => {
-                            // debugger;
+                        /> */}
+                          {value.Attribute !== ""
+
+                            ? value.Attribute?.map((subItems, subIndex) => {
                               const ValueAttribute = () => {
-                                let arr = attributeOptions.filter(
-                                  (items) => subItems.Attribute === items.value
-                                );
-                                for (let i = 0; i < arr.length; i++) {
-                                  return (
-                                    <Box>
-                                      {`${subIndex + 1}. :  ${arr[i].label}`}
-                                    </Box>
-                                  );
-                                }
+                                let attributeName = attributeOptions.find((items) => subItems.Attribute === items.value).label
+                                return <Box>{`${subIndex + 1}. :  ${attributeName}`}</Box>
                               };
                               return (
-                                // <AttributeComponent
-                                //       value={value}
-                                //       attributeOptions={attributeOptions}
-                                //       linkGroups={value.Group}
-                                //       subItems={subItems}
-                                //       ValueAttribute={ValueAttribute}
-                                //       // onDelete={(attribite,group)=deleteAttrb(attribite,group)}
-                                //     />
-                                <Box
-                                  className="mainattribute"
+
+                                <Box className="mainattribute"
                                   onDragStart={(e) => dragStart1(e, subIndex)}
                                   onDragEnter={(e) => dragEnter1(e, subIndex)}
-                                  onDragEnd={drop1(value.Attribute)}
+                                  onDragEnd={() => drop1(value.Attribute, value.Group, index)}
                                   key={subIndex}
                                   draggable
                                 >
-                                  <Box className="attributetitle">
+                               <Grid container spacing={2}>
+                               <Grid item xs={10}> 
+                                  <Box className="attributetitle" sx={{paddingLeft:'20px'}}>
                                     {ValueAttribute()}
                                   </Box>
-                                  <Box className="attributebutton">
+                                  </Grid>
+                                  <Grid item xs={2}> 
+                                  <Box >
                                     <RemoveIcon
-                                      sx={{
-                                        marginLeft: "20px",
-                                        marginTop: "40px",
-                                        color: "white",
-                                        backgroundColor: "#808080",
-                                        borderRadius: "50%",
-                                      }}
+                                  
                                       className="groupremoveicon"
                                       variant="contained"
                                       onClick={() =>
@@ -621,16 +731,18 @@ console.log('list after updating is', list);
                                           value.Group
                                         )
                                       }
-                                      //  onClick={() => deleteAttrb(subItems.Attribute, value.Group)}
+                                    //  onClick={() => deleteAttrb(subItems.Attribute, value.Group)}
                                     />
                                   </Box>
+                                  </Grid>
+                                  </Grid>
                                 </Box>
                               );
                             })
-                          : null} */}
-                      </Box>
-                    );
-                  })}
+                            : null}
+                        </Box>
+                      );
+                    })}
                 </Box>
 
                 {/* <Groups linkGroups={linkGroups} groupOptions = {groupOptions} attributeOptions={attributeOptions} /> */}
@@ -646,6 +758,7 @@ console.log('list after updating is', list);
             </Grid>
           </Box>
         </Paper>
+        </Container>
       </Box>
     </Layout>
   );

@@ -1,12 +1,14 @@
 import  Axios  from 'axios';
 import {TOGGLE_ALL} from '../actionType/Types';
-import {ALLCATEGORIES,ADDCATEGORIES , DELETECATEGORIES , EDITCATEGORIES , EDITFIELD , ADDFIELD ,ALLFIELDS,
-    DELETEFIELD , ADDGROUP, DELETEGROUP, ALLGROUP, EDITGROUP, UPDATEGROUP} 
+import {ALLCATEGORIES,ADDCATEGORIES , DELETECATEGORIES , EDITCATEGORIES , UPDATECATRGORY,
+     EDITFIELD , ADDFIELD ,ALLFIELDS, DELETEFIELD ,
+      ADDGROUP, DELETEGROUP, ALLGROUP, EDITGROUP, UPDATEGROUP} 
 from '../actionType/Types'
 import { baseURL} from '../../../src/Components/Api/BaseLine'
 
 
  export const toggle = () => {
+
     return{
         type:TOGGLE_ALL,
          payload:false,
@@ -20,6 +22,8 @@ import { baseURL} from '../../../src/Components/Api/BaseLine'
     //      })
 
     // } 
+
+    //ALLCATEGORIES
     export const allCategories = () => async dispatch => {
         try {
             const res = await Axios.get(baseURL + 'allCategory');
@@ -35,6 +39,8 @@ import { baseURL} from '../../../src/Components/Api/BaseLine'
             })
         }
     }
+
+    //ADDCATEGORIES
     export const addcategory = (data) => async dispatch => {
         try {
             await Axios.post(baseURL + `addCategory`, { ...data });
@@ -49,7 +55,7 @@ import { baseURL} from '../../../src/Components/Api/BaseLine'
     }
 
 
-
+//DELETECATEGORIES
     export const deletecategory = (id) => async dispatch => {
         try {
             const res = await Axios.delete(baseURL + `deleteCategory/${id}`);
@@ -66,9 +72,11 @@ import { baseURL} from '../../../src/Components/Api/BaseLine'
         }
     }
 
+    //EDITCATEGORIES
     export const editcategory = (id) => async dispatch =>{
         try{
             const response = await Axios.get(baseURL +  `singleCategory/${id}`);
+            // const response = await Axios.get('https://jsonplaceholder.typicode.com/users/1');
             dispatch({
                 type : EDITCATEGORIES,
                 payload : response.data,
@@ -82,6 +90,25 @@ import { baseURL} from '../../../src/Components/Api/BaseLine'
 
         }
     }
+
+    
+//UPDATECATRGORY
+export const UpdateCategory = (id) => async dispatch =>{
+    try{
+        const response = await Axios.put(baseURL +  `updatecategory`,{...id});
+        dispatch({
+            type    : UPDATECATRGORY,
+            payload : response.data,
+        })
+
+    }catch(e){
+        dispatch({
+            type : 'USERS_ERROR',
+            payload : console.log(e)
+        })
+
+    }
+}
 
 //ADDATTRIBUTE
     export const addField = (data) => async dispatch => {

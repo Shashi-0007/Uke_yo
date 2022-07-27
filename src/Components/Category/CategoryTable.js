@@ -6,7 +6,7 @@ import DataTableExtensions from "react-data-table-component-extensions";
 import { Paper } from '@mui/material';
 import "react-data-table-component-extensions/dist/index.css";
 import { useSelector,useDispatch } from 'react-redux';
-import { toggle } from '../../redux/action/Action';
+
 import {allCategories , deletecategory ,editcategory} from '../../redux/action/Action'
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -119,7 +119,7 @@ const CategoryTable = () => {
 
       useEffect(()=>{
           setData(getAllCategory)
-          dispatch(toggle())
+
       },[getAllCategory])
        
    
@@ -146,11 +146,11 @@ const CategoryTable = () => {
      
     <>
     <Layout>
-       <div className={classes.root} >
+       <div className='root' >
 
           <div className={classes.student}>
               <Paper variant='outlined' className={classes.table}
-               style={{ position: 'absolute', right: 0, left: toggleState ? 300 : 0, width:toggleState ? '80%' : '90%' ,transition: '.3s all', }}>
+               style={{ position: 'absolute', right: 0, left: toggleState ? 280 : 0, width:toggleState ? '80%' : '90%' ,transition: '.3s all', }}>
                      <DataTableExtensions {...tableData} >
                         <Table
                           columns={columns}

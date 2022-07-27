@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Paper, Box, Button, Typography, TextField } from '@mui/material';
+import { Paper, Box, Button, Typography, TextField ,Container,Grid} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Layout from '../../Pages/Layout';
 import FormLabel from '@mui/material/FormLabel';
@@ -10,6 +10,10 @@ import { useDispatch ,useSelector} from 'react-redux';
 import {addcategory} from '../../redux/action/Action'
 import {allField} from '../../redux/action/Action'
 import { addGroup } from '../../redux/action/Action';
+
+import { useNavigate } from 'react-router-dom';
+
+
 
 
 
@@ -24,16 +28,11 @@ const useStyle = makeStyles((theme) => ({
     background: theme.palette.secondary.light,
     justifyContent: 'center',
     zIndex: -99,
-    '& .MuiPaper-root': {
-      width: '100%',
-      marginLeft:'18%',
-      marginTop: "10%",
-      height: 'max-content',
+    "& .MuiPaper-root": {
+      width: "100%",
+      height: "max-content",
       padding: `${theme.spacing(4)} 0`,
-      [theme.breakpoints.down('lg')]: {
-        width: '70%',
-        padding: `${theme.spacing(2)} 0`,
-      },
+
     },
 
   },
@@ -53,7 +52,7 @@ const useStyle = makeStyles((theme) => ({
       color: theme.palette.secondary.light,
     },
     '& .css-1nrlq1o-MuiFormControl-root': {
-      width: '90%',
+    
       display: 'flex',
       justifyContent: 'flex-start',
       marginBottom: theme.spacing(2),
@@ -101,10 +100,10 @@ const useStyle = makeStyles((theme) => ({
  
  
   },
-  statusDiv:{
-    display:'flex',
-    alignItems:'center',
-  },
+  // statusDiv:{
+  //   display:'flex',
+  //   alignItems:'center',
+  // },
   active:{
     fontSize: '17px!important',
       fontWeight: '500!important',
@@ -124,11 +123,12 @@ const useStyle = makeStyles((theme) => ({
 
 const AddGroup = (props) => {
 
-  const [txt, setTxt] = useState('');
+  const [massage, setMessage] = useState('');
+  const toggleState = useSelector((state)=>state.togglingReducer.togglingAll)
 
   const classes = useStyle(props);
 
-
+const navigate = useNavigate()
   const dispatch = useDispatch();
 
 
@@ -198,41 +198,58 @@ const AddGroup = (props) => {
   }
 
   const handleAddGroup = () => {
-   dispatch(addGroup(group));
+    if(!group.groupname && !group.groupdisplayname) {
+      setMessage('please fill all input')
+    }else if(!group.groupname){
+      setMessage('please fill group input')
+    }else if(!group.groupdisplayname){
+      setMessage('please fill the group name input')
+    }else{
+      setMessage('Add group successfully')
+      dispatch(addGroup(group));
+    }
+
   };
   
   let colon = "`[]";
   let regEx = `!@#$%^&*()_+1234567890-={}|:",./<>~;* ?'${colon}`;
 
-
-  console.log('regEx',group)
-  console.log('check data')
+  const handleCancel = () => {
+     navigate('/grouptable')
+   };
   return (
     <Layout>
       <div className={classes.root}>
-        <Paper className={classes.paper} elevation={0}>
+      
+      <Container fixed>
+    
+        <Paper className='paper' elevation={0}  style={{  transform: toggleState ? 'translate(10%)' : 'translate(0%)', marginRight:toggleState && 100  ,transition: '.3s all', }}>
+        <h4>{massage}</h4>
           <Box className={classes.inputs}>
-            <Typography variant="h5" component="h5" sx={{ marginBottom: 2 }}>
+            <Typography variant="h5" component="h5"  className='heading'>
               Add Group
             </Typography>
-
-            <TextField
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                <TextField
               type="text"
               id="outlined-basic"
               label="Group Name"
               variant="outlined"
-              sx={{ width: "90%", marginBottom: 2 }}
+              sx={{ width: "100%", marginBottom: 2 }}
               name="groupname"
               value={group.groupname}
               onChange={handleStudent}
               
             />
-               <TextField
+                </Grid>
+                <Grid item xs={6}>
+                <TextField
               type="text"
               id="outlined-basic"
               label="Display Group Name"
               variant="outlined"
-              sx={{ width: "90%", marginBottom: 2 }}
+              sx={{ width: "100%", marginBottom: 2 }}
               name="groupdisplayname"
               value={group.groupdisplayname}
               onChange={handleStudent}
@@ -241,11 +258,15 @@ const AddGroup = (props) => {
               // }
               
             />
+                </Grid>
+              </Grid>
+   
+      
             <FormControl className={classes.radionBtns}>
               <FormLabel id="demo-row-radio-buttons-group-label">
                 Status
               </FormLabel>
-              <Box className={classes.statusDiv}>
+              <Box className='statusDiv'>
                 <Switch
                   checked={group.status}
                   name="status"
@@ -276,16 +297,29 @@ const AddGroup = (props) => {
                 )}
               </Box>
             </FormControl>
+            <Box>
             <Button
               variant="contained"
-              className={classes.stundentBtn}
+          
               onClick={handleAddGroup}
+              sx={{ background:'#138b13'}}
+             className='btn'
             >
-              Add
+              Save
             </Button>
+            <Button
+              variant="contained"
+              onClick={handleCancel}
+              className='btn_cancel'
+            >
+              Cancel
+            </Button>
+            </Box>
           </Box>
         </Paper>
-      </div>
+        </Container>
+        </div>
+  
     </Layout>
   );
 };

@@ -5,8 +5,7 @@ const Layout = ({children}) => {
   return (
     <div className='main_div'>
      <ButtonAppBar />
-  
-        {children}
+     {children}
     </div>
   )
 }

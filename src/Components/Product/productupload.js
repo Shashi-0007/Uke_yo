@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { FormControlLabel, Paper, Box, Button, Typography, TextField ,Checkbox} from '@mui/material';
+import { FormControlLabel, Paper, Box, Button, Typography, TextField ,Checkbox,Container} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Layout from '../../Pages/Layout';
+import { useSelector } from 'react-redux';
 
 
 
@@ -19,8 +20,7 @@ import Layout from '../../Pages/Layout';
 const useStyle = makeStyles((theme) => ({
   root: {
     width: '100%',
-    height: '700px',
-    color: 'red',
+
     display: 'flex',
     alignItems: 'center',
     background: theme.palette.secondary.light,
@@ -42,9 +42,9 @@ const useStyle = makeStyles((theme) => ({
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
     justifyContent: 'center',
     zIndex: 99,
+    marginTop:'30px',
     '& .MuiInputLabel-root': {
       fontSize: 15,
       fontWeight: 500,
@@ -126,7 +126,7 @@ const useStyle = makeStyles((theme) => ({
 const Uploadcsv = (props) => {
 
   const classes = useStyle(props);
-
+  const toggleState = useSelector((state)=>state.togglingReducer.togglingAll)
   const [file, setFile] = useState();
   const [fileName, setFileName] = useState("");
 
@@ -154,14 +154,16 @@ const Uploadcsv = (props) => {
 
   return (
     <Layout>
-      <div className={classes.root}>
-        <Paper className={classes.paper} elevation={5}>
-          <Box className={classes.inputs}>
+      <div className={classes.root} style={{  transform: toggleState ? 'translate(10%)' : 'translate(0%)', marginRight:toggleState && 100  ,transition: '.3s all', }}>
+        <Container>
+       
+          <Box className={classes.inputs} >
             <Typography variant="h5" component="h5" sx={{ marginBottom: 2 }}>
               Upload Product
             </Typography>
-
-          <input type="file" onChange={saveFile} /> <br/>
+            <Paper className='paper' elevation={0} sx={{border: '1px solid #262125!important',}}>
+              <Box className='product_input_file'>
+             <input type="file" onChange={saveFile} /> 
 
             <Button
               variant="contained"
@@ -170,8 +172,11 @@ const Uploadcsv = (props) => {
             >
               Upload
             </Button>
+            </Box>
+            </Paper>
           </Box>
-        </Paper>
+       
+        </Container>
       </div>
     </Layout>
   );

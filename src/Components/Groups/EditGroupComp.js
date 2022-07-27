@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Paper, Box, Button, Typography, TextField,Container ,Grid} from '@mui/material';
+import { Paper, Box, Button, Typography, TextField ,Container,Grid} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Layout from '../../Pages/Layout';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Select from 'react-select';
 import { useDispatch ,useSelector} from 'react-redux';
-import {  UpdateGroup,editGroup} from '../../redux/action/Action';
-import '../../App.css'
-import { useNavigate } from 'react-router-dom';
+import {addcategory} from '../../redux/action/Action'
+import {allField} from '../../redux/action/Action'
+import { addGroup } from '../../redux/action/Action';
 
+import { useNavigate } from 'react-router-dom';
+import {  UpdateGroup,editGroup} from '../../redux/action/Action';
 
 
 
@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 const useStyle = makeStyles((theme) => ({
   root: {
     width: '100%',
+    height: 'auto',
     color: 'red',
     display: 'flex',
     alignItems: 'center',
@@ -53,7 +54,7 @@ const useStyle = makeStyles((theme) => ({
       color: theme.palette.secondary.light,
     },
     '& .css-1nrlq1o-MuiFormControl-root': {
-      width: '90%',
+    
       display: 'flex',
       justifyContent: 'flex-start',
       marginBottom: theme.spacing(2),
@@ -101,10 +102,10 @@ const useStyle = makeStyles((theme) => ({
  
  
   },
-  statusDiv:{
-    display:'flex',
-    alignItems:'center',
-  },
+  // statusDiv:{
+  //   display:'flex',
+  //   alignItems:'center',
+  // },
   active:{
     fontSize: '17px!important',
       fontWeight: '500!important',
@@ -122,31 +123,29 @@ const useStyle = makeStyles((theme) => ({
 
 }))
 
-const EditGroup = (props) => {
-  const [message, setMessage] = useState('') 
-  const navigate = useNavigate() 
-  // const getAllCategory   = useSelector((state)=>state.allGroupReducer.categoryData)
-  const editGroups = useSelector((state)=>state.editGroupReducer.edit)
-  const toggleState = useSelector((state)=>state.togglingReducer.togglingAll)
+const EditGroupComp = (props) => {
 
-  const [txt, setTxt] = useState('');
+
+  const toggleState = useSelector((state)=>state.togglingReducer.togglingAll)
+  const editGroups = useSelector((state)=>state.editGroupReducer.edit)
+  const [message, setMessage] = useState('') 
+  
 
   const classes = useStyle(props);
 
-
+  const navigate = useNavigate()
   const dispatch = useDispatch();
 
 
 
   const [group, setGroup] = useState({
-    id :"",
     groupname  : "",
     groupdisplayname  : "",
-    statusApi  : "",
-    status     : "",
+    status     : false,
+    statusApi  : "0",
   });
 
-  //status     : false,
+
   useEffect(()=>{
     setGroup({
       id :editGroups.id,
@@ -158,6 +157,10 @@ const EditGroup = (props) => {
     // let a={value:editGroups.parent_cat,label: 'Furniture'}
     // handleChangeOpt(a)
 },[editGroups])
+
+
+
+
 
 
   const handlerStatus = (e) => {
@@ -190,7 +193,14 @@ const EditGroup = (props) => {
     });
 
   };
-
+  const handleChangeOpt = (selectedOption) => {
+    setGroup((prev) => {
+      return {
+        ...prev,
+        feildtype: selectedOption.value,
+      };
+    });
+  };
 
   const onInputChange = (e) => {
     const { value } = e.target;
@@ -206,38 +216,41 @@ const EditGroup = (props) => {
     
     }
   }
+
   const handleAddGroup = () => {
-    let editdata ={id: editGroups.id}
-    dispatch(UpdateGroup(group))
-    .then(() => dispatch(editGroup(editdata))).then(()=>setMessage(' Group Updated Successfully'))
+    if(!group.groupname && !group.groupdisplayname ){
+      setMessage('Please fill the all inputs')
+    }else{
+      let editdata ={id: editGroups.id}
+      dispatch(UpdateGroup(group))
+      .then(() => dispatch(editGroup(editdata))).then(()=>setMessage(' Group Updated Successfully'))
+    }
+    
+  };
+  const EditGroupComp = () => {
+   dispatch(addGroup(group));
   };
   
   let colon = "`[]";
   let regEx = `!@#$%^&*()_+1234567890-={}|:",./<>~;* ?'${colon}`;
 
 
-const handleCancel = () =>{
-   navigate('/grouptable')
-}
- 
+  const handleCancel = () => {
+    navigate('/grouptable')
+  };
+
   return (
     <Layout>
       <div className={classes.root}>
       <Container fixed>
-        <Paper className='paper' elevation={0}   style={{ position: 'absolute', right: 0, left: toggleState ? 300 : 0, width:toggleState ? '80%' : '90%' ,transition: '.3s all', }}>
-        {message !== '' ? 
-        <Box className='hello'>
-          <Stack sx={{ width: '100% !important', alignItems:'center'}} >
-                  <Alert severity="success">{message}</Alert>
-              </Stack>
-          </Box>
-          : null}
+    
+        <Paper className='paper' elevation={0}  style={{  transform: toggleState ? 'translate(10%)' : 'translate(0%)', marginRight:toggleState && 100  ,transition: '.3s all', }}>
+        <h4>{message}</h4>
           <Box className={classes.inputs}>
-            <Typography variant="h5" component="h5" sx={{ marginBottom: 2 }} className='heading'>
-              Edit Group
+            <Typography variant="h5" component="h5"  className='heading'>
+            Edit Group
             </Typography>
-          
-            <Grid container spacing={2}>
+              <Grid container spacing={2}>
                 <Grid item xs={6}>
                 <TextField
               type="text"
@@ -268,19 +281,23 @@ const handleCancel = () =>{
             />
                 </Grid>
               </Grid>
+   
+      
             <FormControl className={classes.radionBtns}>
               <FormLabel id="demo-row-radio-buttons-group-label">
                 Status
               </FormLabel>
-              <Box className={classes.statusDiv}>
+              <Box className='statusDiv'>
                 <Switch
                   checked={group.status}
                   name="status"
-                  value={group.statusApi}
+                  value={group.status}
                   inputProps={{ "aria-label": "controlled" }}
                   onChange={handlerStatus}
                 />
                 {group.status ? (
+                  <>
+
                   <Typography
                     variant="body1"
                     componenet="p"
@@ -288,35 +305,45 @@ const handleCancel = () =>{
                   >
                     active
                   </Typography>
+               
+                  </>
                 ) : (
+                  <>
+
                   <Typography variant="body1" className={classes.inactive}>
                     Inactive
                   </Typography>
+
+                  </>
                 )}
               </Box>
             </FormControl>
-            <Box className='btn_group'>
+            <Box>
             <Button
               variant="contained"
-              className='btn'
+          
               onClick={handleAddGroup}
+              sx={{ background:'#138b13'}}
+             className='btn'
             >
-              Update
+               Update
             </Button>
             <Button
               variant="contained"
-              className='btn_cancel'
               onClick={handleCancel}
+              className='btn_cancel'
+              sx={{marginLeft:"20px ", background:'#ec4343'}}
             >
-              cancel
+              Cancel
             </Button>
             </Box>
           </Box>
         </Paper>
         </Container>
-      </div>
+        </div>
+  
     </Layout>
   );
 };
 
-export default EditGroup;
+export default EditGroupComp;

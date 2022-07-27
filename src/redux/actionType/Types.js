@@ -13,4 +13,6 @@ export const ADDGROUP         =  'ADDGROUP'
 export const DELETEGROUP      =  'DELETEGROUP'
 export const ALLGROUP         =  'ALLGROUP'
 export const EDITGROUP        =  'EDITGROUP'
-export const UPDATEGROUP      =  'UPDATEGROUP'
+export const UPDATEGROUP      =  'UPDATEGROUP'     
+export const UPDATECATRGORY      =  'UPDATECATRGORY'     
+
